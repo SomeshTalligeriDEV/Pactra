@@ -1,0 +1,129 @@
+/**
+ * What the daemon needs to run, and where it refuses to start.
+ *
+ * A misconfigured daemon that starts anyway is worse than one that does not:
+ * it holds a key. So every value is checked here, once, and the process exits
+ * rather than discovering a missing address halfway through a payment.
+ */
+/* A relative path rather than an alias: this package runs under plain node,
+   where a tsconfig `paths` entry does not exist and a bundler is not involved.
+   One import, resolved the same way at build time and at run time. */
+import { homedir } from "node:os";
+import { join } from "node:path";
+import { ARC, ERC8004 } from "../../fixtures/src/index.ts";
+
+export interface NodeKey {
+  /** The mandate node this key is the operator of. */
+  node: `0x${string}`;
+  /** Where the private key comes from. Never the value itself. */
+  keyEnv: string;
+}
+
+export interface Config {
+  rpcUrl: string;
+  chainId: number;
+  vault: `0x${string}`;
+  registry: `0x${string}`;
+  usdc: `0x${string}`;
+  /** The seat. Absent means this daemon publishes nothing, and says so. */
+  record?: `0x${string}`;
+  /** ERC-8004 Identity. Live on Arc already; overridable for a local chain. */
+  identity: `0x${string}`;
+  /** CAIP-2 networks and assets this daemon will settle on. */
+  networks: string[];
+  assets: string[];
+  port: number;
+  /**
+   * How often to poll for a receipt, in milliseconds.
+   *
+   * viem's default is 4,000, which is written for chains where a block is
+   * minutes away. Arc has sub-second deterministic finality, so that default
+   * spends up to four seconds per purchase waiting for something that already
+   * happened — on a path this project argues should add no latency.
+   */
+  pollMs: number;
+  keys: NodeKey[];
+  /** Where a key minted at run time by a spawn is written, before the spawn is sent. */
+  keyFile: string;
+}
+
+class ConfigError extends Error {}
+
+/**
+ * What the daemon reads, declared once.
+ *
+ * `load` uses this, and so does the config block the website tells people to
+ * paste. Two config blocks were written by hand before this existed and both
+ * named variables no code has ever read — a reader could copy either and watch
+ * it fail. A variable added to `load` and not to this list will show up
+ * missing at startup, which is the direction that fails safely.
+ */
+export const ENV = {
+  required: {
+    PACTRA_VAULT: "TreeVault address, from deployments/<chainId>.json",
+    PACTRA_REGISTRY: "MandateRegistry address, from the same file",
+    "PACTRA_NODE_<label>": "the mandate node this daemon acts for",
+    "PACTRA_KEY_<label>": "the operator key for that node. The agent never sees it",
+  },
+  optional: {
+    PACTRA_RECORD: "ConductRecord, from deployments/<chainId>.json. Without it, refusals are enforced but never published",
+    PACTRA_IDENTITY: `ERC-8004 Identity; defaults to ${ERC8004.identity}`,
+    PACTRA_RPC: `defaults to ${ARC.rpc}`,
+    PACTRA_CHAIN_ID: `defaults to ${ARC.chainId}`,
+    PACTRA_USDC: "the 6-decimal ERC-20 view; defaults to Arc's",
+    PACTRA_NETWORKS: "CAIP-2 ids this daemon will settle on",
+    PACTRA_ASSETS: "assets it will pay in",
+    PACTRA_PORT: "defaults to 8402",
+    PACTRA_POLL_MS: "receipt polling interval; defaults to 250, matched to Arc's finality rather than to viem's 4,000",
+    PACTRA_KEY_FILE: "where a spawned child's key is written, before the spawn is sent; defaults to ~/.pactra/pactra.env",
+  },
+} as const;
+
+/* These read the env they are given, not the process's. `load` takes an
+   environment as an argument so a test can build one; reading process.env
+   here anyway would make that argument a lie. */
+function required(env: NodeJS.ProcessEnv, name: string): string {
+  const v = env[name];
+  if (!v) throw new ConfigError(`${name} is not set`);
+  return v;
+}
+
+function address(env: NodeJS.ProcessEnv, name: string): `0x${string}` {
+  const v = required(env, name);
+  if (!/^0x[0-9a-fA-F]{40}$/.test(v)) throw new ConfigError(`${name} is not an address: ${v}`);
+  return v as `0x${string}`;
+}
+
+export function load(env = process.env): Config {
+  const keys: NodeKey[] = [];
+  /* PACTRA_NODE_<label> = <nodeId>, with the key in PACTRA_KEY_<label>. The
+     key never appears in configuration, only the name of the variable holding
+     it, so a config dump cannot leak one. */
+  for (const [name, value] of Object.entries(env)) {
+    if (!name.startsWith("PACTRA_NODE_") || !value) continue;
+    const label = name.slice("PACTRA_NODE_".length);
+    if (!/^0x[0-9a-fA-F]{64}$/.test(value)) {
+      throw new ConfigError(`${name} is not a node id: ${value}`);
+    }
+    const keyEnv = `PACTRA_KEY_${label}`;
+    if (!env[keyEnv]) throw new ConfigError(`${name} is set but ${keyEnv} is not`);
+    keys.push({ node: value as `0x${string}`, keyEnv });
+  }
+  if (keys.length === 0) throw new ConfigError("no PACTRA_NODE_<label> is set");
+
+  return {
+    rpcUrl: env.PACTRA_RPC ?? ARC.rpc,
+    chainId: Number(env.PACTRA_CHAIN_ID ?? ARC.chainId),
+    vault: address(env, "PACTRA_VAULT"),
+    registry: address(env, "PACTRA_REGISTRY"),
+    usdc: (env.PACTRA_USDC ?? ARC.erc20) as `0x${string}`,
+    record: env.PACTRA_RECORD ? address(env, "PACTRA_RECORD") : undefined,
+    identity: (env.PACTRA_IDENTITY ?? ERC8004.identity) as `0x${string}`,
+    networks: (env.PACTRA_NETWORKS ?? `eip155:${ARC.chainId}`).split(",").map((s) => s.trim()),
+    assets: (env.PACTRA_ASSETS ?? ARC.erc20).split(",").map((s) => s.trim()),
+    port: Number(env.PACTRA_PORT ?? 8402),
+    pollMs: Number(env.PACTRA_POLL_MS ?? 250),
+    keys,
+    keyFile: env.PACTRA_KEY_FILE ?? join(homedir(), ".pactra", "pactra.env"),
+  };
+}
