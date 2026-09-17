@@ -1,0 +1,202 @@
+{
+  "checkedAt": "2026-09-17T04:05:50.968Z",
+  "results": [
+    {
+      "name": "site",
+      "url": "http://127.0.0.1:5274/",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "title": "Pactra · one budget for a tree of agents",
+      "textLength": 5132,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-site-1440.png",
+      "ok": true
+    },
+    {
+      "name": "docs",
+      "url": "http://127.0.0.1:5274/docs",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "title": "Pactra docs",
+      "textLength": 2436,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-docs-1440.png",
+      "ok": true
+    },
+    {
+      "name": "drill",
+      "url": "http://127.0.0.1:5274/drill",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "title": "The hostile drill · Pactra",
+      "textLength": 3954,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-drill-1440.png",
+      "ok": true
+    },
+    {
+      "name": "overview",
+      "url": "http://127.0.0.1:5275/console/",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "title": "Pactra console",
+      "textLength": 1081,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-overview-1440.png",
+      "ok": true
+    },
+    {
+      "name": "agents",
+      "url": "http://127.0.0.1:5275/console/agents",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "title": "Pactra console",
+      "textLength": 1297,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-agents-1440.png",
+      "ok": true
+    },
+    {
+      "name": "refusals",
+      "url": "http://127.0.0.1:5275/console/refusals",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "title": "Pactra console",
+      "textLength": 252,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-refusals-1440.png",
+      "ok": true
+    },
+    {
+      "name": "new-mandate",
+      "url": "http://127.0.0.1:5275/console/new",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "title": "Pactra console",
+      "textLength": 372,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-new-mandate-1440.png",
+      "ok": true
+    },
+    {
+      "name": "site",
+      "url": "http://127.0.0.1:5274/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "title": "Pactra · one budget for a tree of agents",
+      "textLength": 5132,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-site-390.png",
+      "ok": true
+    },
+    {
+      "name": "docs",
+      "url": "http://127.0.0.1:5274/docs",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "title": "Pactra docs",
+      "textLength": 2042,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-docs-390.png",
+      "ok": true
+    },
+    {
+      "name": "drill",
+      "url": "http://127.0.0.1:5274/drill",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "title": "The hostile drill · Pactra",
+      "textLength": 3947,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-drill-390.png",
+      "ok": true
+    },
+    {
+      "name": "overview",
+      "url": "http://127.0.0.1:5275/console/",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "title": "Pactra console",
+      "textLength": 973,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-overview-390.png",
+      "ok": true
+    },
+    {
+      "name": "agents",
+      "url": "http://127.0.0.1:5275/console/agents",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "title": "Pactra console",
+      "textLength": 1267,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-agents-390.png",
+      "ok": true
+    },
+    {
+      "name": "refusals",
+      "url": "http://127.0.0.1:5275/console/refusals",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "title": "Pactra console",
+      "textLength": 222,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-refusals-390.png",
+      "ok": true
+    },
+    {
+      "name": "new-mandate",
+      "url": "http://127.0.0.1:5275/console/new",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "title": "Pactra console",
+      "textLength": 342,
+      "overflow": false,
+      "errors": [],
+      "screenshot": "/private/tmp/pactra-new-mandate-390.png",
+      "ok": true
+    }
+  ],
+  "ok": true
+}

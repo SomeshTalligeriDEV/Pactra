@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-09-17T13:12:40.458Z",
+  "passed": 10,
+  "checks": [
+    "http://127.0.0.1:5374 at 1440px: navigation, menu close, two case studies, both walkthrough links, direct anchor load",
+    "http://127.0.0.1:5374 at 390px: navigation, menu close, two case studies, both walkthrough links, direct anchor load",
+    "http://127.0.0.1:5180 at 1440px: navigation, menu close, two case studies, both walkthrough links, direct anchor load",
+    "http://127.0.0.1:5180 at 390px: navigation, menu close, two case studies, both walkthrough links, direct anchor load",
+    "Standalone legacy route /drill: redirects and reloads successfully",
+    "Standalone legacy route /drill/: redirects and reloads successfully",
+    "Standalone legacy route /drill/index.html: redirects and reloads successfully",
+    "Standalone legacy route /case-studies: redirects and reloads successfully",
+    "Standalone legacy route /case-studies/: redirects and reloads successfully",
+    "Standalone legacy route /case-studies/index.html: redirects and reloads successfully"
+  ],
+  "errors": []
+}

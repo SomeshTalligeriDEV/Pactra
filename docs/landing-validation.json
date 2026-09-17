@@ -1,0 +1,33 @@
+{
+  "checkedAt": "2026-09-17T12:14:32.631Z",
+  "base": "http://127.0.0.1:5374",
+  "passed": 25,
+  "checks": [
+    "Static home, exact video source, Pactra copy, final counters, no framework bundle",
+    "Viewport 1440x900: complete hero, no overlap, menu hidden",
+    "Viewport 1920x1080: complete hero, no overlap, menu hidden",
+    "Viewport 768x1024: complete hero, no overlap, menu hidden",
+    "Viewport 720x900: complete hero, no overlap, menu hidden",
+    "Viewport 390x844: complete hero, no overlap, menu hidden",
+    "Viewport 320x568: complete hero, no overlap, menu hidden",
+    "Viewport 1024x600: complete hero, no overlap, menu hidden",
+    "Viewport 844x390: complete hero, no overlap, menu hidden",
+    "Viewport 667x375: complete hero, no overlap, menu hidden",
+    "Mobile menu: all links visible; Escape, overlay, resize and link close; focus restored",
+    "Original Paid/Refused walkthrough, proof links, step controls, keyboard tabs and animated trees",
+    "Original colored surfaces and product layouts at 320, 390, 720 and 1440px",
+    "Preserved route /product",
+    "Preserved route /docs",
+    "Preserved route /docs/mcp",
+    "Preserved route /drill",
+    "Preserved route /agent/41827",
+    "Preserved route /refusal/13",
+    "Preserved route /attest/41827",
+    "Preserved route /console/",
+    "Preserved route /console/new",
+    "SPA home navigation and Get Started → mandate setup",
+    "Reduced motion: visible headline/menu and final counters",
+    "Primary font unavailable: local Geist fallback fits"
+  ],
+  "errors": []
+}

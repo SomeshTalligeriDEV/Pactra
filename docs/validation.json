@@ -1,0 +1,45 @@
+{
+  "reviewDate": "2026-09-17",
+  "rows": [
+    [
+      "Builds",
+      "Site and console production bundles; daemon, meter, attest, eval, proxy and MCP TypeScript checks passed. MCP bundle and brand generation passed."
+    ],
+    [
+      "Solidity",
+      "98 tests passed, 0 failed; Solidity 0.8.28 with Foundry 1.7.1 and the pinned forge-std revision."
+    ],
+    [
+      "Runtime suites",
+      "193 passed, 0 failed: daemon 68, meter 39, attest 40, eval 10, MCP 15, proxy 18 and fixtures 3."
+    ],
+    [
+      "Browser",
+      "14 route/viewport checks passed: seven routes at desktop 1440 px and mobile 390 px, with no page exceptions or horizontal overflow. Preview/read flows only; no wallet transactions."
+    ],
+    [
+      "Rebrand checks",
+      "First-party legacy-name scan clean; package and lockfile names consistent. Ops scripts passed bash syntax checks. Brand assets regenerated."
+    ],
+    [
+      "Document",
+      "18 A4 pages; representative pages visually inspected; searchable text, embedded fonts, page numbers and navigation outline. Text bounds verified."
+    ],
+    [
+      "Limits",
+      "No public deployment, remote repository change, production login or live payment verification. Build warnings include frontend bundle size and third-party annotations."
+    ]
+  ],
+  "tests": {
+    "contracts": 98,
+    "daemon": 68,
+    "meter": 39,
+    "attest": 40,
+    "eval": 10,
+    "mcp": 15,
+    "proxy": 18,
+    "fixtures": 3,
+    "failed": 0
+  },
+  "browserPassed": 14
+}
