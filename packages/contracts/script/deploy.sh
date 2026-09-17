@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+#
+# Deploy Pactra to Arc, record the addresses, verify the sources.
+#
+# The private key is never an argument to this script and never an environment
+# variable. Foundry keeps it in an encrypted keystore and asks for the password
+# when it needs to sign:
+#
+#     cast wallet import pactra-deployer --interactive
+#
+# After that, this script never sees it and neither does your shell history.
+# Foundry asks for the keystore password on the terminal. To run unattended,
+# put that password in a file only you can read and name it. The key stays in
+# the keystore either way; what is named here is a password, never a key.
+#
+#     printf '%s' 'the password' > ~/.pactra-pw && chmod 600 ~/.pactra-pw
+#     PACTRA_PASSWORD_FILE=~/.pactra-pw ./script/deploy.sh
+#
+#     ./script/deploy.sh                 # Arc testnet, from packages/fixtures
+#     PACTRA_ACCOUNT=other ./script/deploy.sh
+#
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+CHAIN_ID="${PACTRA_CHAIN_ID:-5042002}"
+RPC="${PACTRA_RPC:-https://rpc.testnet.arc.io}"
+ACCOUNT="${PACTRA_ACCOUNT:-pactra-deployer}"
+# testnet.arcscan.app/api now 301-redirects here; Foundry's verifier does not
+# follow that redirect on its POST, so the target has to be the real host.
+VERIFIER_URL="${PACTRA_VERIFIER_URL:-https://explorer.testnet.arc.io/api/}"
+
+# ETH_PASSWORD_FILE is not read by foundry 1.8.1, which prompts anyway and
+# fails with "Device not configured" when there is no terminal, so the flag is
+# passed explicitly rather than exported.
+# macOS ships bash 3.2, where `set -u` treats an EMPTY array's expansion as an
+# unbound variable and kills the script — so every use is written
+# `${PASSWORD[@]+"${PASSWORD[@]}"}`, which expands to nothing when the array is
+# empty and to the flag when it is not. Newer bash does not need this; the
+# machine most people run it on does.
+PASSWORD=()
+if [ -n "${PACTRA_PASSWORD_FILE:-}" ]; then
+  PASSWORD=(--password-file "$PACTRA_PASSWORD_FILE")
+fi
+
+echo "chain     $CHAIN_ID"
+echo "rpc       $RPC"
+echo "account   $ACCOUNT (keystore)"
+
+# The generated fixtures carry USDC, GatewayWallet and the two ERC-8004
+# registries, so regenerate before building rather than deploying against a
+# stale copy of any of them.
+node ../fixtures/scripts/emit-solidity.ts
+
+# The same four addresses, exported so the recorder writes what the script
+# deployed against rather than leaving nulls beside real addresses. Solidity
+# reads them through vm.envOr and falls back to the same fixtures, so there is
+# still exactly one source.
+fixture() { node -e "import('../fixtures/src/index.ts').then((f) => console.log($1))"; }
+export PACTRA_USDC="${PACTRA_USDC:-$(fixture 'f.ARC.erc20')}"
+export PACTRA_GATEWAY="${PACTRA_GATEWAY:-$(fixture 'f.GATEWAY.wallet')}"
+export PACTRA_IDENTITY="${PACTRA_IDENTITY:-$(fixture 'f.ERC8004.identity')}"
+export PACTRA_REPUTATION="${PACTRA_REPUTATION:-$(fixture 'f.ERC8004.reputation')}"
+echo "usdc      $PACTRA_USDC"
+echo "gateway   $PACTRA_GATEWAY"
+echo "identity  $PACTRA_IDENTITY"
+echo "reputatn  $PACTRA_REPUTATION"
+
+SENDER="$(cast wallet address --account "$ACCOUNT" ${PASSWORD[@]+"${PASSWORD[@]}"})"
+echo "sender    $SENDER"
+
+BALANCE="$(cast balance "$SENDER" --rpc-url "$RPC")"
+echo "balance   $BALANCE wei (gas on Arc is USDC, 18 decimals)"
+if [ "$BALANCE" = "0" ]; then
+  echo
+  echo "This account holds nothing on chain $CHAIN_ID. Fund it first:"
+  echo "  https://faucet.circle.com"
+  exit 1
+fi
+
+forge script script/Deploy.s.sol:Deploy \
+  --rpc-url "$RPC" \
+  --account "$ACCOUNT" \
+  --sender "$SENDER" \
+  ${PASSWORD[@]+"${PASSWORD[@]}"} \
+  --broadcast
+
+PACTRA_COMMIT="$(git rev-parse HEAD 2>/dev/null || echo unknown)" \
+  node scripts/record-deployment.mjs "$CHAIN_ID"
+
+# The same addresses, into the fixture the bundles read. They cannot open the
+# deployments file at runtime, and an address retyped into a fixture is one
+# that can disagree with the chain it names.
+node scripts/record-addresses.mjs "$CHAIN_ID"
+
+# And the README's own table, which was the last place an address was typed by
+# hand — in the most public file in the repository, where a redeploy makes it
+# quietly wrong.
+node scripts/record-readme.mjs "$CHAIN_ID"
+
+REGISTRY="$(node -e "console.log(require('./deployments/$CHAIN_ID.json').registry)")"
+VAULT="$(node -e "console.log(require('./deployments/$CHAIN_ID.json').vault)")"
+RECORD="$(node -e "console.log(require('./deployments/$CHAIN_ID.json').record)")"
+
+# G5 needs the sources readable by anyone. arcscan runs Blockscout v11.2.8,
+# confirmed against its own /api/v2/config/backend-version on 2026-09-08.
+echo
+echo "verifying sources on $VERIFIER_URL"
+for pair in "$REGISTRY:src/MandateRegistry.sol:MandateRegistry" \
+            "$VAULT:src/TreeVault.sol:TreeVault" \
+            "$RECORD:src/ConductRecord.sol:ConductRecord"; do
+  ADDR="${pair%%:*}"
+  TARGET="${pair#*:}"
+  forge verify-contract "$ADDR" "$TARGET" \
+    --chain-id "$CHAIN_ID" \
+    --verifier blockscout \
+    --verifier-url "$VERIFIER_URL" \
+    --watch || echo "verification failed for $TARGET — rerun forge verify-contract by hand"
+done
+
+echo
+echo "registry  https://testnet.arcscan.app/address/$REGISTRY"
+echo "vault     https://testnet.arcscan.app/address/$VAULT"
+echo "record    https://testnet.arcscan.app/address/$RECORD"
+echo
+echo "Next: open a mandate from the owner's own wallet, then fund the vault."
+echo "Neither is this script's job — both need a signature only the owner has."
+echo
+echo "One claim this script cannot check: README.md's \"What this does not"
+echo "claim\" still says the deployed contracts bound the budget per window"
+echo "and not per lifetime. That was true of the addresses this run replaced."
+echo "Read it and change it, or the repository is under-claiming in public."

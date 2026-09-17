@@ -1,0 +1,31 @@
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+# The generated fixtures sit under test/ because that is who reads them most,
+# and the deploy script reads the same file rather than a second copy.
+allow_paths = ["test"]
+out = "out"
+libs = ["lib"]
+solc = "0.8.28"
+evm_version = "shanghai"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+bytecode_hash = "none"
+# Refusals are returns, not reverts. Every test asserts on emitted events.
+gas_reports = ["TreeVault", "MandateRegistry"]
+# G4 writes the numbers its own run produced, so no figure the console renders
+# is ever typed by a human. Write access, to one directory, for that alone.
+fs_permissions = [{ access = "write", path = "./out" }]
+# A search is thousands of strategies in one transaction-free run, and the
+# default per-test ceiling of 2^30 gas stops it a third of the way through.
+# This is a test-harness limit; no contract here is affected by it.
+gas_limit = 9223372036854775807
+
+[fuzz]
+runs = 512
+
+[invariant]
+runs = 256
+depth = 32
