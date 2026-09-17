@@ -102,30 +102,11 @@ flowchart TB
 
 ### One purchase, end to end
 
-```mermaid
-sequenceDiagram
-    actor Agent
-    participant Runtime as Pactra runtime
-    participant Seller as x402 seller
-    participant Vault as TreeVault
-    participant Rail as Gateway / settlement
-    Agent->>Runtime: Fetch URL
-    Runtime->>Seller: Request resource
-    Seller-->>Runtime: 402 challenge: amount and payee
-    Runtime->>Vault: Draw for node and declared payee
-    Vault->>Vault: Evaluate node and every ancestor
-    alt Bounds pass
-        Vault-->>Runtime: Accepted draw; ancestors debited
-        Runtime->>Rail: Obtain payment capacity
-        Runtime->>Seller: Retry with payment authorization
-        Seller-->>Runtime: Resource response
-        Runtime-->>Agent: Result
-    else Bound fails
-        Vault-->>Runtime: Stored refusal and reason
-        Runtime->>Runtime: Attempt conduct publication
-        Runtime-->>Agent: Structured refusal
-    end
-```
+1. **Request:** The agent asks Pactra to fetch a URL.
+2. **Price:** The seller returns an x402 challenge with an amount and payee.
+3. **Check:** The vault evaluates the requesting node and every ancestor.
+4. **Accept:** If the bounds pass, the draw debits the path. The runtime obtains payment capacity and retries the request with payment authorization.
+5. **Refuse:** If a bound fails, the vault stores a refusal. The runtime attempts conduct publication and returns the reason to the agent.
 
 For trust boundaries, state ownership, recovery paths, and known risks, read the [system architecture](docs/Pactra-System-Architecture-and-User-Workflows.md) or its [PDF edition](docs/Pactra-System-Architecture-and-User-Workflows.pdf).
 
