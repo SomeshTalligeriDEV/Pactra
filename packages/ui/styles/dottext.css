@@ -1,0 +1,25 @@
+.pactra-dottext {
+  display: inline-block;
+  color: var(--pactra-dot-tone, currentColor);
+  line-height: 0;
+}
+
+.pactra-dottext__svg {
+  display: block;
+  overflow: visible;
+  width: 100%;
+  height: auto;
+  color: inherit;
+}
+
+/* Inline mode: height comes from the type around it, width follows the
+   glyphs. This is what lets the numeral rule apply inside a pill or a cell
+   without every caller measuring a box first. */
+.pactra-dottext--inline {
+  height: 1em;
+  vertical-align: -0.08em;
+}
+.pactra-dottext--inline .pactra-dottext__svg {
+  width: auto;
+  height: 100%;
+}

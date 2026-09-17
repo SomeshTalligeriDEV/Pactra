@@ -1,0 +1,164 @@
+/* ==========================================================================
+   Progress, Loader, Steps.
+   ========================================================================== */
+
+.pactra-progress { display: flex; flex-direction: column; gap: var(--pactra-space-2); width: 100%; }
+.pactra-progress__header { display: flex; align-items: baseline; justify-content: space-between; gap: var(--pactra-space-4); }
+.pactra-progress__label { color: var(--pactra-ink); font-size: var(--pactra-size-caption); letter-spacing: var(--pactra-track-caption); }
+.pactra-progress__value { color: var(--pactra-accent); font-size: var(--pactra-size-micro); font-variant-numeric: tabular-nums; font-weight: var(--pactra-weight-medium); }
+
+.pactra-progress__track {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.1);
+  box-shadow: var(--pactra-shadow-inset-well);
+}
+.pactra-progress--md .pactra-progress__track { height: 8px; }
+.pactra-progress--sm .pactra-progress__track { height: 5px; }
+
+.pactra-progress__fill { display: block; height: 100%; border-radius: var(--pactra-radius-pill); }
+.pactra-progress[data-glaze="rose"] .pactra-progress__fill { background: var(--pactra-glaze-rose); }
+.pactra-progress[data-glaze="violet"] .pactra-progress__fill { background: var(--pactra-glaze-violet); }
+.pactra-progress[data-glaze="ember"] .pactra-progress__fill { background: var(--pactra-glaze-ember); }
+
+.pactra-progress__fill--sweep {
+  width: 34%;
+  animation: pactra-sweep 1.25s var(--pactra-ease-support) infinite;
+}
+@keyframes pactra-sweep {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(330%); }
+}
+
+/* ---- loader -------------------------------------------------------------- */
+.pactra-loader { display: inline-flex; align-items: center; color: var(--pactra-accent); }
+.pactra-loader--sm { font-size: 14px; }
+.pactra-loader--md { font-size: 20px; }
+.pactra-loader--lg { font-size: 30px; }
+
+.pactra-loader__spinner { animation: pactra-spin 0.9s linear infinite; }
+
+.pactra-loader__radar { display: block; width: 2.2em; height: 2.2em; }
+.pactra-loader__radar svg { width: 100%; height: 100%; overflow: visible; }
+.pactra-loader__radar-ring { fill: none; stroke: currentColor; stroke-width: 1; opacity: 0.18; }
+.pactra-loader__radar-tick { stroke: currentColor; opacity: 0.28; }
+.pactra-loader__radar-sweep {
+  transform-origin: 50px 50px;
+  animation: pactra-spin 1.9s var(--pactra-ease-support) infinite;
+}
+
+.pactra-loader__dots { display: inline-flex; gap: 0.28em; }
+.pactra-loader__dot {
+  width: 0.3em;
+  height: 0.3em;
+  border-radius: var(--pactra-radius-pill);
+  background: currentColor;
+}
+
+.pactra-loader__bar {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: 7em;
+  height: 0.2em;
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.12);
+}
+.pactra-loader__bar-fill {
+  position: absolute;
+  inset-block: 0;
+  width: 36%;
+  border-radius: var(--pactra-radius-pill);
+  background: currentColor;
+  animation: pactra-sweep 1.25s var(--pactra-ease-support) infinite;
+}
+
+/* ---- steps: the connection map, carrying progress ------------------------ */
+.pactra-steps { position: relative; }
+.pactra-steps--horizontal { padding-top: 4px; }
+
+.pactra-steps__map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 34px;
+  pointer-events: none;
+}
+.pactra-steps__map svg { display: block; overflow: visible; }
+.pactra-steps__rail-base {
+  fill: none;
+  stroke: rgba(140, 19, 32, 0.16);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.pactra-steps__rail-lit {
+  fill: none;
+  stroke: var(--pactra-accent);
+  stroke-width: 1.15;
+  stroke-linecap: round;
+}
+
+.pactra-steps__list { display: flex; gap: var(--pactra-space-4); margin: 0; padding: 0; list-style: none; }
+.pactra-steps--horizontal .pactra-steps__list { flex-direction: row; }
+.pactra-steps--vertical .pactra-steps__list { flex-direction: column; }
+
+.pactra-steps__item {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pactra-space-3);
+  min-width: 0;
+}
+.pactra-steps--horizontal .pactra-steps__item {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* The node: the map's glowing dot, not a numbered chip. */
+.pactra-steps__marker {
+  font-variant-numeric: tabular-nums;
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(140, 19, 32, 0.18);
+  border-radius: var(--pactra-radius-pill);
+  background: var(--pactra-paper);
+  color: rgba(34, 34, 34, 0.34);
+  font-size: 11px;
+}
+
+.pactra-steps__item--done .pactra-steps__marker,
+.pactra-steps__item--current .pactra-steps__marker {
+  font-variant-numeric: tabular-nums;
+  border-color: transparent;
+  background: var(--pactra-glaze-rose);
+  background-origin: border-box;
+  color: #fff;
+}
+.pactra-steps__item--current .pactra-steps__marker {
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 0 0 4px var(--pactra-accent-quiet), 0 0 14px 2px rgba(255, 103, 150, 0.5);
+}
+.pactra-steps__item--done .pactra-steps__marker {
+  font-variant-numeric: tabular-nums; box-shadow: 0 0 10px rgba(255, 103, 150, 0.32); }
+
+.pactra-steps__text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.pactra-steps__label { color: var(--pactra-ink); font-size: var(--pactra-size-caption); font-weight: var(--pactra-weight-medium); letter-spacing: var(--pactra-track-caption); }
+
+/* Six labels do not fit on a phone, and the step's own question is on screen
+   directly under the rail. The lit node keeps the position. */
+@media (max-width: 640px) {
+  .pactra-steps--horizontal .pactra-steps__label,
+  .pactra-steps--horizontal .pactra-steps__description { display: none; }
+}
+.pactra-steps__item--todo .pactra-steps__label { color: var(--pactra-copy-dim); font-weight: var(--pactra-weight-regular); }
+.pactra-steps__description { color: var(--pactra-copy-dim); font-size: var(--pactra-size-micro); line-height: 1.4; }

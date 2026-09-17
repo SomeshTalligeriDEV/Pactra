@@ -1,0 +1,155 @@
+/* ==========================================================================
+   Menu, dropdown panel, Sidebar, Drawer.
+   ========================================================================== */
+
+.pactra-menu { position: relative; display: inline-flex; }
+.pactra-menu__trigger { display: inline-flex; }
+
+.pactra-menu__panel {
+  position: absolute;
+  z-index: var(--pactra-z-overlay);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 190px;
+  padding: 5px;
+  border: 1px solid var(--pactra-glass-line);
+  border-radius: var(--pactra-radius-4);
+  background: var(--pactra-panel);
+  background-origin: border-box;
+  box-shadow: var(--pactra-shadow-panel), var(--pactra-shadow-overlay);
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
+  backdrop-filter: blur(12px) saturate(1.08);
+}
+.pactra-menu__panel--bottom { top: calc(100% + 6px); }
+.pactra-menu__panel--top { bottom: calc(100% + 6px); }
+.pactra-menu__panel--start { left: 0; }
+.pactra-menu__panel--end { right: 0; }
+
+.pactra-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--pactra-radius-2);
+  background: transparent;
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-caption);
+  letter-spacing: var(--pactra-track-caption);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-menu__item:hover:not(:disabled),
+.pactra-menu__item--active:not(:disabled) { background: rgba(34, 34, 34, 0.06); }
+.pactra-menu__item:disabled { opacity: 0.4; cursor: not-allowed; }
+.pactra-menu__item:focus-visible { outline: 2px solid var(--pactra-focus-on-paper); outline-offset: -2px; }
+.pactra-menu__item--destructive { color: var(--pactra-critical); }
+.pactra-menu__item--destructive:hover:not(:disabled) { background: rgba(166, 59, 80, 0.09); }
+
+.pactra-menu__icon { color: var(--pactra-copy-dim); font-size: 15px; }
+.pactra-menu__item--destructive .pactra-menu__icon { color: inherit; }
+.pactra-menu__label { flex: 1 1 auto; min-width: 0; }
+.pactra-menu__meta { flex: 0 0 auto; color: var(--pactra-copy-dim); font-size: var(--pactra-size-micro); }
+
+.pactra-menu__separator { height: 1px; margin: 4px 6px; background: var(--pactra-hairline-soft); }
+
+/* ---- sidebar ------------------------------------------------------------- */
+.pactra-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pactra-space-4);
+  width: 236px;
+  padding: var(--pactra-space-4);
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-5);
+  background: rgba(255, 255, 255, 0.56);
+  transition: width var(--pactra-dur-fast) var(--pactra-ease-settle);
+}
+.pactra-sidebar--collapsed { width: 62px; }
+
+.pactra-sidebar__header { padding: 0 var(--pactra-space-2) var(--pactra-space-2); }
+.pactra-sidebar__scroll { flex: 1 1 auto; display: flex; flex-direction: column; gap: var(--pactra-space-5); min-height: 0; overflow-y: auto; }
+.pactra-sidebar__section { display: flex; flex-direction: column; gap: var(--pactra-space-2); }
+
+.pactra-sidebar__section-title {
+  margin: 0 0 2px;
+  padding: 0 10px;
+  color: var(--pactra-copy-dim);
+  font-size: 10.5px;
+  font-weight: var(--pactra-weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pactra-sidebar__list { display: flex; flex-direction: column; gap: 1px; margin: 0; padding: 0; list-style: none; }
+
+.pactra-sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--pactra-radius-3);
+  background: transparent;
+  color: var(--pactra-copy);
+  font-size: var(--pactra-size-caption);
+  letter-spacing: var(--pactra-track-caption);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--pactra-dur-control) var(--pactra-ease-settle),
+    color var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-sidebar--collapsed .pactra-sidebar__item { justify-content: center; padding: 9px 0; }
+.pactra-sidebar__item:hover:not(:disabled) { background: rgba(34, 34, 34, 0.06); color: var(--pactra-ink); }
+.pactra-sidebar__item:disabled { opacity: 0.4; cursor: not-allowed; }
+.pactra-sidebar__item:focus-visible { outline: 2px solid var(--pactra-focus-on-paper); outline-offset: -2px; }
+.pactra-sidebar__item--active {
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--pactra-shadow-control);
+  color: var(--pactra-ink);
+  font-weight: var(--pactra-weight-medium);
+}
+.pactra-sidebar__item--active .pactra-sidebar__icon { color: var(--pactra-accent); }
+
+.pactra-sidebar__icon { color: var(--pactra-copy-dim); font-size: 16px; }
+.pactra-sidebar__label { flex: 1 1 auto; min-width: 0; }
+.pactra-sidebar__badge {
+  padding: 1px 7px;
+  border-radius: var(--pactra-radius-pill);
+  background: var(--pactra-accent-quiet);
+  color: var(--pactra-accent);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+}
+.pactra-sidebar__footer { padding-top: var(--pactra-space-3); border-top: 1px solid var(--pactra-hairline-soft); }
+
+/* ---- drawer -------------------------------------------------------------- */
+.pactra-drawer-layer { position: fixed; inset: 0; z-index: var(--pactra-z-overlay); font-family: var(--pactra-font); }
+
+.pactra-drawer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(320px, 86vw);
+  background: var(--pactra-paper);
+  box-shadow: var(--pactra-shadow-overlay);
+}
+.pactra-drawer--left { left: 0; }
+.pactra-drawer--right { right: 0; }
+
+.pactra-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pactra-space-4);
+  padding: var(--pactra-space-4) var(--pactra-space-5);
+  border-bottom: 1px solid var(--pactra-hairline-soft);
+}
+.pactra-drawer__title { margin: 0; font-size: 16px; font-weight: var(--pactra-weight-semibold); letter-spacing: var(--pactra-track-caption); }
+.pactra-drawer__body { flex: 1 1 auto; overflow-y: auto; padding: var(--pactra-space-4); }

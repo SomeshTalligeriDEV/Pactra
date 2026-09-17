@@ -1,0 +1,531 @@
+import { Link, useParams } from "react-router-dom";
+import {
+  Card,
+  CardBody,
+  Container,
+  Enforced,
+  Grid,
+  Headline,
+  MetricCard,
+  Preview,
+  Section,
+  Stack,
+  Tag,
+  Text,
+  usePageMeta,
+} from "pactra-ui";
+import { ARC, ENFORCED_BY, REASON_MEANING, STRENGTH, formatUsdc, isAddress, shortAddress, shortId, strengthOf } from "@pactra/fixtures";
+import {
+  addrUrl,
+  refusalByPath,
+  refusalOrdinal,
+  shortTx,
+  txUrl,
+  type Refusal as RefusalRow,
+} from "@pactra/fixtures/preview";
+import { RecordShell } from "../parts/RecordShell";
+import { RecordSkeleton } from "../parts/RecordSkeleton";
+import { useLiveRefusal, type LiveRefusal } from "../parts/meter";
+import { useEntrance } from "../parts/motion";
+
+/**
+ * /refusal/<id> — the page the chain points at.
+ *
+ * This is not a page anybody navigates to. `ConductRecord.RECORD_BASE` is a
+ * Solidity `constant`, so every record Pactra writes into the ERC-8004
+ * Reputation Registry carries `https://pactra.example/refusal/<id>` as its
+ * feedback URI, forever, with no setter to change it. Someone arrives here
+ * from a registry entry, cold, wanting to know what the tag means. Until this
+ * page existed they got the site's not-found — a record whose linkage
+ * resolves to nothing, which is the exact property this project claims 98.7%
+ * of that registry's existing feedback lacks.
+ *
+ * So the page answers the question a registry reader has, in the order they
+ * have it: what was asked, what stopped it, on whose limit, and did anybody
+ * later sign it out. Nothing here is a score. Every line is a thing the
+ * contract did, and names the transaction it did it in.
+ *
+ * One dot-face figure, per the rationing rule. This page exists to show that
+ * a bound held, so the money that did not move wears it.
+ */
+
+/** What a reader needs before they trust anything else on the page. */
+function Provenance({ refusal }: { refusal: RefusalRow }) {
+  return (
+    <Card>
+      <CardBody>
+        <Stack direction="column" gap="sm" align="start">
+          <Text variant="micro" tone="dim" as="p" className="eyebrow">
+            where this came from
+          </Text>
+          <Text variant="body" tone="copy" as="p">
+            The refusal is in transaction{" "}
+            <a href={txUrl(refusal.tx)} target="_blank" rel="noreferrer" className="mono">
+              {shortTx(refusal.tx)}
+            </a>{" "}
+            on {ARC.name}. The contract returned rather than reverting, which
+            is why there is an event to read at all: a refusal that reverts
+            rolls back its own record.
+          </Text>
+          <Enforced>{ENFORCED_BY.refusal}</Enforced>
+        </Stack>
+      </CardBody>
+    </Card>
+  );
+}
+
+/** The override, when there is one. Its absence is also an answer. */
+function Release({ refusal }: { refusal: RefusalRow }) {
+  return (
+    <Card>
+      <CardBody>
+        <Stack direction="column" gap="sm" align="start">
+          <Tag tone={refusal.released ? "neutral" : "positive"} size="sm" dot>
+            {refusal.released ? "signed out later" : "still standing"}
+          </Tag>
+          {refusal.release ? (
+            <>
+              <Text variant="body" tone="copy" as="p">
+                A named human paid this counterparty anyway, from their own
+                key, at {refusal.release.at}. The bound did not move: the
+                release pays the party that was refused and touches no window,
+                because that money was never inside the window's authority.
+              </Text>
+              <Text variant="body" tone="copy" as="p">
+                Signed by{" "}
+                {/* An explorer link to a sentence resolves to nothing, so an
+                    owner nobody has signed as is named, not linked. */}
+                {isAddress(refusal.release.by) ? (
+                  <a
+                    href={addrUrl(refusal.release.by)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mono"
+                  >
+                    {shortAddress(refusal.release.by, 10, 6)}
+                  </a>
+                ) : (
+                  <span className="mono">the owner’s own key</span>
+                )}{" "}
+                in{" "}
+                <a
+                  href={txUrl(refusal.release.tx)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mono"
+                >
+                  {shortTx(refusal.release.tx)}
+                </a>
+                . The refusal above stays where it is.
+              </Text>
+              <Enforced>{ENFORCED_BY.release}</Enforced>
+            </>
+          ) : (
+            <>
+              <Text variant="body" tone="copy" as="p">
+                Nobody has signed an exception. There is no supervisor role and
+                no admin key on either contract, so the only way past this is
+                the owner's own signature on a release, and it would appear
+                here as its own transaction.
+              </Text>
+              <Enforced>{ENFORCED_BY.release}</Enforced>
+            </>
+          )}
+        </Stack>
+      </CardBody>
+    </Card>
+  );
+}
+
+/** Whether this refusal is in the registry, and what that is worth. */
+function Published({ refusal }: { refusal: RefusalRow }) {
+  return (
+    <Card>
+      <CardBody>
+        <Stack direction="column" gap="sm" align="start">
+          <Text variant="micro" tone="dim" as="p" className="eyebrow">
+            in the reputation registry
+          </Text>
+          {refusal.attested ? (
+            <>
+              <Text variant="body" tone="copy" as="p">
+                Published against identity{" "}
+                <Link to={`/agent/${refusal.attested.agentId}`} className="mono">
+                  {refusal.attested.agentId}
+                </Link>{" "}
+                at {refusal.attested.at}, tagged <span className="mono">pactra.refused</span>.
+                The daemon publishes every refusal with no filter and after the
+                fact, so a release cannot retract one and a broken recorder
+                costs the record its completeness and costs enforcement
+                nothing.
+              </Text>
+              <Enforced>{ENFORCED_BY.record}</Enforced>
+            </>
+          ) : (
+            <Text variant="body" tone="copy" as="p">
+              Not published. That means the recorder had no seat or has not
+              caught up — it does not mean the refusal did not happen. The
+              transaction above is the authority either way.
+            </Text>
+          )}
+        </Stack>
+      </CardBody>
+    </Card>
+  );
+}
+
+
+/**
+ * The same page, for a refusal the meter has and the fixtures do not.
+ *
+ * It prints what the chain carries and nothing else. There is no headroom
+ * figure here on purpose: the window arithmetic that produces one lives in the
+ * contract, the event does not carry it, and an indexer that recomputes it is
+ * a second implementation that can disagree with the thing it reports on.
+ * One figure fewer is the honest difference between a record and a mock-up.
+ */
+function LiveRefusalPage({ data }: { data: LiveRefusal }) {
+  const animate = useEntrance();
+  const amount6 = BigInt(data.amount6);
+  /* The sentences are written to sit mid-line in the docs table, so they start
+     lowercase. Here one opens a paragraph. */
+  const meaning = REASON_MEANING[data.reason] ?? data.reason;
+  const opens = meaning.charAt(0).toUpperCase() + meaning.slice(1);
+
+  usePageMeta({
+    title: `Refusal ${data.id} · Pactra`,
+    description:
+      `${formatUsdc(amount6)} was asked for and the contract refused it: ` +
+      `${meaning}. The transaction is on ${ARC.name}.`,
+  });
+
+  const figures = [
+    { label: "the node that asked", value: shortId(data.node) },
+    { label: "the bound that stopped it", value: shortId(data.breachedAt) },
+    { label: "asked for", value: formatUsdc(amount6) },
+    { label: "the recipient", value: shortAddress(data.counterparty, 10, 6) },
+  ];
+
+  return (
+    <RecordShell>
+      <Container width="wide" className="stackpage">
+        <header className="public__head">
+          <Text variant="micro" tone="dim" as="p" className="eyebrow">
+            refusal {data.id} · block {data.site.blockNumber} · {ARC.name}
+          </Text>
+          <Headline animate={animate} lines={["A bound held,", "and left a record."]} />
+          <Text variant="lead" tone="copy" as="p" className="public__lede">
+            The node <span className="mono">{shortId(data.node)}</span>{" "}
+            asked for {formatUsdc(amount6)} and the contract refused it. This
+            page is where that refusal resolves, because the id in the record is
+            this one.
+          </Text>
+          <Stack direction="row" gap="md" wrap>
+            <Tag tone="positive" size="sm" dot>
+              read from the chain
+            </Tag>
+            <Text variant="micro" tone="dim" as="span">
+              chain {data.chainId}, blocks {data.fromBlock}–{data.toBlock}
+            </Text>
+          </Stack>
+        </header>
+
+        <Card>
+          <CardBody>
+            <Stack direction="column" gap="sm" align="start">
+              <Text variant="micro" tone="dim" as="p" className="eyebrow">
+                what stopped it
+              </Text>
+              <Text variant="body" tone="copy" as="p">
+                {opens}. The contract evaluated the limit itself; nothing in
+                the path scored the request, and no model was asked.
+              </Text>
+              <span className="mono">{data.reason}</span>
+              <a href={txUrl(data.site.transactionHash)} target="_blank" rel="noreferrer" className="mono">
+                {shortTx(data.site.transactionHash)}
+              </a>
+              <Stack direction="row" gap="md" wrap>
+                <Tag tone={data.released ? "neutral" : "positive"} size="sm" dot>
+                  {data.released ? "signed out later" : "still standing"}
+                </Tag>
+                {/* `null` is not `false`: the meter says nothing about a range
+                    it has not read, and a page that renders that as "never
+                    published" is inventing a fact about the registry. */}
+                <Tag tone={data.attested ? "neutral" : "caution"} size="sm" dot>
+                  {data.attested === null
+                    ? "publication unknown in this range"
+                    : data.attested
+                      ? "published to the registry"
+                      : "not published"}
+                </Tag>
+              </Stack>
+            </Stack>
+          </CardBody>
+        </Card>
+
+        {/* The claim this whole project rests on is that the refusal outlives
+            us, in a registry we do not own. The badge above asserted it and the
+            page offered nothing to check it against — while the meter was
+            sending the identity, the record hash and the transaction that wrote
+            it, all of which were parsed into a boolean and dropped. */}
+        {data.attested ? (
+          <Card>
+            <CardBody>
+              <Stack direction="column" gap="sm" align="start">
+                <Text variant="micro" tone="dim" as="p" className="eyebrow">
+                  where it was published
+                </Text>
+                <Text variant="body" tone="copy" as="p">
+                  Written to the ERC-8004 Reputation Registry under agent{" "}
+                  <Link to={`/agent/${data.attested.agentId}`} className="mono">
+                    {data.attested.agentId}
+                  </Link>
+                  , in a registry nobody here deployed and nobody here can edit.
+                </Text>
+                <Stack direction="row" gap="md" wrap>
+                  <a
+                    href={txUrl(data.attested.site.transactionHash)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mono"
+                  >
+                    {shortTx(data.attested.site.transactionHash)}
+                  </a>
+                  <Text variant="micro" tone="dim" as="span" className="mono">
+                    record {shortTx(data.attested.recordHash)}
+                  </Text>
+                </Stack>
+                <Enforced>{ENFORCED_BY.record}</Enforced>
+              </Stack>
+            </CardBody>
+          </Card>
+        ) : null}
+
+        <Section title="the draw the contract refused">
+          <Grid columns={4} min={220} gap="md">
+            {figures.map((row) => (
+              <Card key={row.label}>
+                <CardBody>
+                  <div className="figure">
+                    <span className="figure__value num">{row.value}</span>
+                    <span className="figure__label">{row.label}</span>
+                  </div>
+                </CardBody>
+              </Card>
+            ))}
+          </Grid>
+        </Section>
+      </Container>
+    </RecordShell>
+  );
+}
+
+
+/** Asked, not answered yet. A not-found that flashes first is a lie told fast. */
+function Loading({ id }: { id: string | undefined }) {
+  /* One pane: a refusal page is a single record, not a record beside a column
+     of figures. A skeleton in the wrong shape moves the page twice. */
+  return <RecordSkeleton eyebrow={`refusal ${id ?? "—"} · ${ARC.name}`} columns={1} />;
+}
+
+
+function NotFound({ id }: { id: string | undefined }) {
+  usePageMeta({
+    title: "No such refusal · Pactra",
+    description: "This record id is not in the range the meter has indexed.",
+  });
+  return (
+    <RecordShell>
+      <Container width="wide" className="stackpage">
+        <header className="public__head">
+          <Text variant="micro" tone="dim" as="p" className="eyebrow">
+            refusal {id ?? "—"} · {ARC.name}
+          </Text>
+          <Headline lines={["No refusal", "with that id."]} />
+          <Text variant="lead" tone="copy" as="p" className="public__lede">
+            Records resolve here by the id the contract wrote into them. This
+            one is not in the range the meter has indexed, so the honest answer
+            is nothing rather than the nearest refusal — a record URI that
+            shows a different refusal is worse than one that shows none.
+          </Text>
+          <Stack direction="row" gap="md" wrap>
+            <Link to="/agent/41827">A conduct record</Link>
+            <Link to="/">The argument</Link>
+          </Stack>
+        </header>
+      </Container>
+    </RecordShell>
+  );
+}
+
+export default function Refusal() {
+  const { id } = useParams();
+  /* The meter first, because the ids the chain writes are the meter's and the
+     fixtures' are a demo. A preview id still resolves, so the illustration
+     keeps working beside real records. */
+  const live = useLiveRefusal(id);
+  const refusal = refusalByPath(id);
+
+  if (live.state === "live") return <LiveRefusalPage data={live.data} />;
+  if (live.state === "loading" && !refusal) return <Loading id={id} />;
+  if (!refusal) return <NotFound id={id} />;
+  return <PreviewRefusal refusal={refusal} id={id} />;
+}
+
+function PreviewRefusal({ refusal, id: _id }: { refusal: RefusalRow; id: string | undefined }) {
+  const animate = useEntrance();
+
+  const ordinal = refusalOrdinal(refusal);
+  const held6 = refusal.requested6 - refusal.headroom6;
+
+  usePageMeta({
+    title: `Refusal ${ordinal} · Pactra`,
+    description:
+      `${formatUsdc(refusal.requested6)} was asked for and the contract refused it: ` +
+      `${refusal.boundLabel}. The transaction is on ${ARC.name}.`,
+  });
+
+  return (
+    <RecordShell>
+      <Container width="wide" className="stackpage">
+        <header className="public__head">
+          <Text variant="micro" tone="dim" as="p" className="eyebrow">
+            refusal {ordinal} · {refusal.at} · {ARC.name}
+          </Text>
+          <Headline animate={animate} lines={["A bound held,", "and left a record."]} />
+          <Text variant="lead" tone="copy" as="p" className="public__lede">
+            The node <span className="mono">{refusal.nodeLabel}</span> asked for{" "}
+            {formatUsdc(refusal.requested6)} and the contract refused it. This
+            page is where that refusal resolves, because the id in the record
+            is this one, and it is the whole of what the record means.
+          </Text>
+          <Preview note="the shape is the meter's own; these figures are fixtures until the deploy" />
+        </header>
+
+        <Grid columns={2} min={340} gap="lg" align="start">
+          <Stack direction="column" gap="sm" align="start">
+            {/* The one figure this page exists for: money that did not move,
+                because a limit somebody had already signed said it could
+                not. The progress ring is what was left against what was
+                asked, so a bar close to empty is the refusal itself. */}
+            <MetricCard
+              animate={animate}
+              title={
+                <>
+                  Refused
+                  <br />
+                  Asked for, and not paid
+                </>
+              }
+              value={formatUsdc(held6, 0).replace("$", "")}
+              unit="USDC"
+              progress={
+                refusal.requested6 === 0n
+                  ? 0
+                  : Number(refusal.headroom6) / Number(refusal.requested6)
+              }
+              caption={
+                <>
+                  {formatUsdc(refusal.headroom6)} of
+                  <br />
+                  {formatUsdc(refusal.requested6)} was available
+                </>
+              }
+              glaze="rose"
+            />
+            <Enforced>{ENFORCED_BY.refusal}</Enforced>
+          </Stack>
+
+          <Stack direction="column" gap="lg">
+            <Card>
+              <CardBody>
+                <Stack direction="column" gap="sm" align="start">
+                  <Text variant="micro" tone="dim" as="p" className="eyebrow">
+                    what stopped it
+                  </Text>
+                  <Text variant="body" tone="copy" as="p">
+                    {refusal.boundLabel}. The contract evaluated the limit
+                    itself; nothing in the path scored the request, and no
+                    model was asked.
+                  </Text>
+                  {/* The strength comes from the bound, not from the
+                      default. `<Enforced>` assumes enforced when given no
+                      strength, and concentration is not: a refusal on that
+                      bound is real, but which counterparty it was measured
+                      against is the daemon's declaration. */}
+                  <Enforced strength={strengthOf(refusal.bound)}>
+                    {refusal.bound}
+                  </Enforced>
+                </Stack>
+              </CardBody>
+            </Card>
+
+            <Provenance refusal={refusal} />
+          </Stack>
+        </Grid>
+
+        <Section title="the draw the contract refused">
+          <Stack direction="column" gap="md">
+            <Grid columns={3} min={220} gap="md">
+              {[
+                {
+                  label: "the node that asked",
+                  value: refusal.nodeLabel,
+                  fn: ENFORCED_BY.budget,
+                },
+                {
+                  label: "asked for",
+                  value: formatUsdc(refusal.requested6),
+                  fn: ENFORCED_BY.refusal,
+                },
+                {
+                  label: "room left at the bound",
+                  value: formatUsdc(refusal.headroom6),
+                  fn: ENFORCED_BY.headroom,
+                },
+              ].map((row) => (
+                <Card key={row.label}>
+                  <CardBody>
+                    <div className="figure">
+                      <span className="figure__value num">{row.value}</span>
+                      <span className="figure__label">{row.label}</span>
+                      <Enforced>{row.fn}</Enforced>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
+            </Grid>
+
+            {/* The counterparty is a URL, and it was in a figure slot beside
+                the three amounts until it was measured: 374px of path in a
+                280px box, clipped with no scrollbar, so the end of the
+                endpoint simply was not on the page. A figure slot sets type
+                for a short number. This one gets a row it can wrap in. */}
+            <Card>
+              <CardBody>
+                <div className="figure">
+                  <span className="figure__value figure__value--path mono">
+                    {refusal.counterparty}
+                  </span>
+                  <span className="figure__label">
+                    the counterparty the daemon declared
+                  </span>
+                  <Enforced strength={STRENGTH.concentration}>
+                    {ENFORCED_BY.concentration}
+                  </Enforced>
+                </div>
+              </CardBody>
+            </Card>
+          </Stack>
+        </Section>
+
+        <Section title="what happened after">
+          <Grid columns={2} min={340} gap="lg" align="start">
+            <Release refusal={refusal} />
+            <Published refusal={refusal} />
+          </Grid>
+        </Section>
+      </Container>
+    </RecordShell>
+  );
+}

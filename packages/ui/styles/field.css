@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Field + inputs. A Pactra input is a well pressed into paper: recessed, not
+   raised. That is the visual opposite of a tile, which is how a page tells
+   you where it wants your hands.
+   ========================================================================== */
+
+.pactra-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pactra-space-2);
+  min-width: 0;
+}
+
+.pactra-field__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-caption);
+  font-weight: var(--pactra-weight-medium);
+  letter-spacing: var(--pactra-track-caption);
+  line-height: 1.3;
+}
+
+.pactra-field__required { color: var(--pactra-accent); }
+
+/* The label and its information icon share a row, so the icon sits with the
+   thing it explains rather than under the control where a hint would go. */
+.pactra-field__labelrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Quiet until it is wanted. It carries the explanation as its accessible
+   name, so a reader who cannot see the bubble is read the sentence and not
+   the word "info". */
+.pactra-field__info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--pactra-copy-dim);
+  cursor: help;
+  transition:
+    color var(--pactra-dur-fast) var(--pactra-ease-settle),
+    background-color var(--pactra-dur-fast) var(--pactra-ease-settle);
+}
+.pactra-field__info svg { width: 15px; height: 15px; }
+.pactra-field__info:hover,
+.pactra-field__info:focus-visible {
+  color: var(--pactra-ink);
+  background: var(--pactra-hairline-soft);
+}
+
+.pactra-field__message {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  color: var(--pactra-copy-dim);
+  font-size: var(--pactra-size-micro);
+  letter-spacing: var(--pactra-track-caption);
+  line-height: 1.4;
+}
+.pactra-field__message--error { color: var(--pactra-critical); }
+.pactra-field__message--success { color: var(--pactra-positive); }
+
+.pactra-field--disabled { opacity: 0.5; }
+
+/* ---- the well ------------------------------------------------------------ */
+.pactra-input {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  width: 100%;
+  min-width: 0;
+  padding: 0 var(--pactra-control-px);
+  border: 1px solid var(--pactra-hairline);
+  border-radius: var(--pactra-radius-3);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--pactra-shadow-inset-well);
+  color: var(--pactra-ink);
+  transition: border-color var(--pactra-dur-control) var(--pactra-ease-settle),
+    box-shadow var(--pactra-dur-control) var(--pactra-ease-settle),
+    background-color var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+
+.pactra-input--sm { height: var(--pactra-control-h-sm); font-size: var(--pactra-size-caption); }
+.pactra-input--md { height: var(--pactra-control-h); }
+.pactra-input--lg { height: var(--pactra-control-h-lg); font-size: var(--pactra-size-body); }
+
+.pactra-input:hover:not(.pactra-input--disabled) {
+  border-color: rgba(34, 34, 34, 0.2);
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.pactra-input--focused,
+.pactra-input:focus-within {
+  border-color: var(--pactra-accent-line);
+  background: #fff;
+  box-shadow: var(--pactra-shadow-inset-well), 0 0 0 3px var(--pactra-accent-quiet);
+}
+
+.pactra-input--invalid {
+  border-color: rgba(166, 59, 80, 0.55);
+  box-shadow: var(--pactra-shadow-inset-well), 0 0 0 3px rgba(166, 59, 80, 0.12);
+}
+
+.pactra-input--disabled {
+  background: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.pactra-input__control {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  outline: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: var(--pactra-track-caption);
+}
+.pactra-input__control::placeholder { color: rgba(34, 34, 34, 0.36); }
+.pactra-input__control:disabled { cursor: not-allowed; }
+.pactra-input__control::-webkit-search-cancel-button { display: none; }
+
+.pactra-input--area { height: auto; padding: var(--pactra-space-4); align-items: stretch; }
+.pactra-input__control--area { resize: vertical; line-height: var(--pactra-leading-body); }
+
+.pactra-input__icon { color: rgba(34, 34, 34, 0.42); font-size: 1.1em; }
+.pactra-input--focused .pactra-input__icon { color: var(--pactra-accent); }
+
+.pactra-input__affix {
+  color: var(--pactra-copy-dim);
+  font-size: 0.92em;
+  white-space: nowrap;
+}
+
+/* ---- search -------------------------------------------------------------- */
+.pactra-search { position: relative; }
+.pactra-search__clear {
+  position: absolute;
+  top: 50%;
+  right: var(--pactra-space-3);
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.07);
+  color: var(--pactra-copy);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-search__clear:hover { background: rgba(34, 34, 34, 0.13); }
+.pactra-search__clear:focus-visible {
+  outline: var(--pactra-focus-ring) solid var(--pactra-focus-on-paper);
+  outline-offset: 2px;
+}
+
+/* These are sentences rather than labels, and a centred three-line sentence is
+   read word by word. `Tooltip` keeps the bubble inside the window on its own
+   now, so the anchoring this used to do here is gone. */
+.pactra-field__labelrow .pactra-tooltip__bubble {
+  max-width: 288px;
+  text-align: left;
+}

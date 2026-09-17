@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Tooltip + Notification + toasts.
+   ========================================================================== */
+
+.pactra-tooltip { position: relative; display: inline-flex; }
+
+.pactra-tooltip__bubble {
+  position: absolute;
+  z-index: var(--pactra-z-overlay);
+  /* `max-content` because the bubble is absolutely positioned inside a wrapper
+     the size of its trigger — an icon — so shrink-to-fit resolves against 16px
+     and any sentence becomes a column one or two words wide. `max-width` alone
+     cannot widen it; it only caps what this allows. */
+  width: max-content;
+  max-width: 240px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--pactra-radius-2);
+  background: rgba(38, 22, 30, 0.94);
+  box-shadow: var(--pactra-shadow-lift);
+  color: rgba(255, 255, 255, 0.94);
+  font-size: var(--pactra-size-micro);
+  letter-spacing: var(--pactra-track-caption);
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.pactra-tooltip__bubble--top { bottom: calc(100% + 7px); left: 50%; transform: translateX(-50%); }
+.pactra-tooltip__bubble--bottom { top: calc(100% + 7px); left: 50%; transform: translateX(-50%); }
+.pactra-tooltip__bubble--left { right: calc(100% + 7px); top: 50%; transform: translateY(-50%); }
+.pactra-tooltip__bubble--right { left: calc(100% + 7px); top: 50%; transform: translateY(-50%); }
+
+/* ---- notification -------------------------------------------------------- */
+.pactra-notification {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pactra-space-3);
+  padding: var(--pactra-space-4);
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-4);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--pactra-shadow-control);
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-caption);
+  line-height: var(--pactra-leading-caption);
+}
+
+.pactra-notification__icon { flex: 0 0 auto; margin-top: 1px; font-size: 16px; }
+.pactra-notification--info .pactra-notification__icon { color: var(--pactra-info); }
+.pactra-notification--positive .pactra-notification__icon { color: var(--pactra-positive); }
+.pactra-notification--caution .pactra-notification__icon { color: var(--pactra-caution); }
+.pactra-notification--critical .pactra-notification__icon { color: var(--pactra-critical); }
+
+.pactra-notification--info { background: rgba(111, 79, 157, 0.07); }
+.pactra-notification--positive { background: rgba(77, 124, 79, 0.08); }
+.pactra-notification--caution { background: rgba(176, 106, 31, 0.09); }
+.pactra-notification--critical { background: rgba(166, 59, 80, 0.08); }
+
+.pactra-notification__text { flex: 1 1 auto; min-width: 0; }
+.pactra-notification__title {
+  margin: 0;
+  color: var(--pactra-ink-strong);
+  font-weight: var(--pactra-weight-semibold);
+  letter-spacing: var(--pactra-track-caption);
+}
+.pactra-notification__body { margin-top: 2px; color: var(--pactra-copy); }
+.pactra-notification__action { flex: 0 0 auto; }
+
+.pactra-notification__close {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin: -2px -2px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pactra-radius-pill);
+  background: transparent;
+  color: var(--pactra-copy-dim);
+  cursor: pointer;
+  transition: background var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-notification__close:hover { background: rgba(34, 34, 34, 0.08); color: var(--pactra-ink); }
+.pactra-notification__close:focus-visible { outline: 2px solid var(--pactra-focus-on-paper); outline-offset: 1px; }
+
+/* ---- toasts -------------------------------------------------------------- */
+.pactra-toasts {
+  position: fixed;
+  z-index: var(--pactra-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--pactra-space-3);
+  width: min(360px, calc(100vw - 32px));
+  padding: 16px;
+  font-family: var(--pactra-font);
+  pointer-events: none;
+}
+.pactra-toasts > * { pointer-events: auto; }
+.pactra-toasts--top-right { top: 0; right: 0; }
+.pactra-toasts--bottom-right { bottom: 0; right: 0; }
+.pactra-toasts--top-center { top: 0; left: 50%; transform: translateX(-50%); }
+.pactra-toasts--bottom-center { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+.pactra-notification--toast {
+  background: rgba(252, 251, 250, 0.96);
+  box-shadow: var(--pactra-shadow-overlay);
+  -webkit-backdrop-filter: blur(10px) saturate(1.06);
+  backdrop-filter: blur(10px) saturate(1.06);
+}

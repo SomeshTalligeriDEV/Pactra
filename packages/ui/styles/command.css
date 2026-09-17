@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Command palette + Kbd.
+   ========================================================================== */
+
+.pactra-command-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--pactra-z-overlay);
+  display: grid;
+  place-items: start center;
+  padding: min(14vh, 120px) var(--pactra-space-5) var(--pactra-space-5);
+  font-family: var(--pactra-font);
+}
+
+.pactra-command {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(620px, 100%);
+  max-height: min(60vh, 520px);
+  overflow: hidden;
+  border: 1px solid var(--pactra-glass-line);
+  border-radius: var(--pactra-radius-6);
+  background: var(--pactra-panel);
+  background-origin: border-box;
+  box-shadow: var(--pactra-shadow-panel), 0 40px 90px rgba(50, 28, 39, 0.28);
+  -webkit-backdrop-filter: blur(20px) saturate(1.12);
+  backdrop-filter: blur(20px) saturate(1.12);
+}
+
+.pactra-command__search {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  padding: var(--pactra-space-4) var(--pactra-space-5);
+  border-bottom: 1px solid var(--pactra-hairline-soft);
+}
+.pactra-command__search-icon { flex: 0 0 auto; color: var(--pactra-accent); font-size: 17px; }
+
+.pactra-command__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  outline: none;
+  color: var(--pactra-ink-strong);
+  font-size: 16px;
+  letter-spacing: var(--pactra-track-caption);
+}
+.pactra-command__input::placeholder { color: rgba(34, 34, 34, 0.36); }
+
+.pactra-command__list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--pactra-space-2);
+  scrollbar-width: thin;
+}
+
+.pactra-command__heading {
+  margin: var(--pactra-space-3) 0 3px;
+  padding: 0 10px;
+  color: var(--pactra-copy-dim);
+  font-size: 10.5px;
+  font-weight: var(--pactra-weight-semibold);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.pactra-command__heading:first-child { margin-top: 2px; }
+
+.pactra-command__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: var(--pactra-radius-3);
+  background: transparent;
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-caption);
+  letter-spacing: var(--pactra-track-caption);
+  text-align: left;
+  cursor: pointer;
+}
+.pactra-command__item > * { position: relative; z-index: 1; }
+
+/* The active row is a moving object, not a repainted background. */
+.pactra-command__marker {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--pactra-radius-3);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--pactra-shadow-control);
+}
+.pactra-command__item--active { color: var(--pactra-ink-strong); }
+
+.pactra-command__item-icon {
+  flex: 0 0 auto;
+  width: 17px;
+  color: var(--pactra-copy-dim);
+  font-size: 16px;
+}
+.pactra-command__item--active .pactra-command__item-icon { color: var(--pactra-accent); }
+.pactra-command__item-label { flex: 1 1 auto; min-width: 0; }
+
+.pactra-command__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  padding: var(--pactra-space-9) var(--pactra-space-5);
+  color: var(--pactra-copy-dim);
+  font-size: var(--pactra-size-caption);
+  text-align: center;
+}
+.pactra-command__empty .pactra-icon { font-size: 22px; opacity: 0.5; }
+
+.pactra-command__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-5);
+  padding: 9px var(--pactra-space-5);
+  border-top: 1px solid var(--pactra-hairline-soft);
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--pactra-copy-dim);
+  font-size: var(--pactra-size-micro);
+}
+.pactra-command__footer span { display: inline-flex; align-items: center; gap: 5px; }
+.pactra-command__count { margin-left: auto; }
+
+/* ---- kbd ----------------------------------------------------------------- */
+.pactra-kbd { display: inline-flex; gap: 3px; }
+
+.pactra-kbd__key {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--pactra-hairline);
+  border-radius: var(--pactra-radius-2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 244, 243, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 0 rgba(58, 25, 39, 0.14);
+  color: var(--pactra-copy);
+  font-family: var(--pactra-font);
+  font-size: 10.5px;
+  line-height: 1;
+}
+.pactra-kbd--sm .pactra-kbd__key { min-width: 18px; height: 18px; padding: 0 4px; }
+.pactra-kbd--md .pactra-kbd__key { min-width: 22px; height: 22px; padding: 0 6px; font-size: 12px; }

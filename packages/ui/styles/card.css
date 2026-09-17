@@ -1,0 +1,182 @@
+/* ==========================================================================
+   Card + MetricCard. The metric card keeps every inner offset as a
+   percentage of its own box, so one --u scale drives the whole tile.
+   ========================================================================== */
+
+.pactra-card { display: flex; min-width: 0; }
+
+.pactra-card__surface > *:not(.pactra-grain) { position: relative; }
+
+.pactra-card__surface {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+}
+
+.pactra-card__media { position: relative; overflow: hidden; background: rgba(34, 34, 34, 0.06); }
+.pactra-card__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* `align-items: start`, because a column flexbox stretches its children: a
+   status pill in a card header was drawn as a full-width bar the width of the
+   card, which reads as a progress bar and not as a label. */
+.pactra-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 3px;
+  padding: var(--pactra-space-5) var(--pactra-space-5) 0;
+}
+.pactra-card__body { flex: 1 1 auto; padding: var(--pactra-space-4) var(--pactra-space-5); color: var(--pactra-copy); font-size: var(--pactra-size-caption); line-height: var(--pactra-leading-body); }
+.pactra-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  padding: 0 var(--pactra-space-5) var(--pactra-space-5);
+}
+.pactra-surface--rose .pactra-card__body,
+.pactra-surface--violet .pactra-card__body,
+.pactra-surface--ember .pactra-card__body { color: var(--pactra-on-glaze-soft); }
+
+/* ---- metric card --------------------------------------------------------- */
+.pactra-metriccard { display: flex; width: 100%; max-width: 429px; }
+
+/* Every offset below is written as a share of `--ref`, the tile's reference
+   height, so it lands on the same pixel row whatever that height is. The point
+   of that is the tile with no action on it.
+
+   The proportions come from the hero, where the bottom of the tile is a
+   button. The console's headline tile has no button, and nothing shortened the
+   tile — so a quarter of it, 136 of 554 pixels, was an empty glaze reserved
+   for a control that was never passed. On a phone that is most of a screen
+   with nothing in it, which is what the tree screen opened with. */
+.pactra-metriccard__surface {
+  position: relative;
+  width: 100%;
+  --ref: 554;
+  /* The rows, in reference pixels. A variant moves them; nothing below knows
+     which variant it is in. */
+  --title: 33.8;
+  --figure: 153;
+  --figure-h: 326.9;
+  --metric: 268.7;
+  --caption: 360.7;
+  --action: 464;
+  aspect-ratio: 429 / var(--ref);
+  border: 1px solid var(--pactra-glass-line);
+  /* 1 unit == 1px when the tile is at its reference 429px width */
+  --u: calc(100cqw / 429);
+}
+
+/* A tile with no action keeps the hero's height and spreads into it, rather
+   than keeping the hero's *rows* and ending 136px early.
+ *
+ * Shortening it to 470 was the first answer and it was wrong in the other
+ * direction: every offset stayed on the pixel row it was on, so the tile got
+ * squat — 429 by 470 against the hero's 429 by 554 — and read as a card that
+ * had been cut off. The figure needs the height; what it does not need is a
+ * band of empty glaze under the caption where a button would have been.
+ *
+ * So the bare tile is the full height with its own four rows, set to leave a
+ * bottom margin that matches the top one. */
+.pactra-metriccard--bare .pactra-metriccard__surface {
+  --title: 50;
+  --figure: 160;
+  --figure-h: 300;
+  --metric: 310;
+  --caption: 441;
+}
+
+.pactra-metriccard__title {
+  position: absolute;
+  z-index: var(--pactra-z-content);
+  top: calc(var(--title) / var(--ref) * 100%);
+  left: 5%;
+  width: 90%;
+  margin: 0;
+  color: var(--pactra-on-glaze);
+  font-size: calc(22.95 * var(--u));
+  font-weight: var(--pactra-weight-semibold);
+  line-height: var(--pactra-leading-title);
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(72, 28, 48, 0.14);
+}
+
+/* The stage's own figure box: the gauge overlaps the metric deliberately, so
+   the number sits inside the ring rather than under it. */
+.pactra-metriccard__figure {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--figure) / var(--ref) * 100%);
+  left: 10.5%;
+  display: grid;
+  place-items: center;
+  width: 79%;
+  height: calc(var(--figure-h) / var(--ref) * 100%);
+}
+
+.pactra-metriccard__metric {
+  position: absolute;
+  z-index: 5;
+  top: calc(var(--metric) / var(--ref) * 100%);
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.97);
+  filter: drop-shadow(0 1px 1px rgba(104, 27, 54, 0.08));
+}
+
+/* Sized by height, never by width.
+   A fixed width made the dot face taller for a short number than for a long
+   one, because the glyph box grows with the digit count: typing a budget of
+   9 gave a figure twice the cap height of 100, and the number appeared to
+   jump around as it was edited. Height is the constant a reader's eye is
+   actually holding, so height is what is pinned. */
+.pactra-metriccard__value {
+  width: auto;
+  max-width: 74%;
+  height: calc(52 * var(--u));
+}
+.pactra-metriccard__value .pactra-dottext__svg { width: auto; height: 100%; }
+
+.pactra-metriccard__unit {
+  /* In tile units, not a percentage of the row: the row is the full width of
+     the card and the number is centred in it, so a percentage sets the gap
+     from an edge the gap has nothing to do with. At 1.3% a short value like a
+     node count sat 6px from its unit and read as one word. */
+  margin-left: calc(11 * var(--u));
+  font-size: calc(30.46 * var(--u));
+  font-weight: var(--pactra-weight-regular);
+  line-height: 1;
+  letter-spacing: calc(-0.8 * var(--u));
+}
+
+.pactra-metriccard__caption {
+  position: absolute;
+  z-index: 5;
+  top: calc(var(--caption) / var(--ref) * 100%);
+  left: 10%;
+  width: 80%;
+  margin: 0;
+  color: var(--pactra-on-glaze-soft);
+  font-size: calc(19.95 * var(--u));
+  letter-spacing: calc(-0.36 * var(--u));
+  line-height: var(--pactra-leading-caption);
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(60, 21, 35, 0.16);
+}
+
+.pactra-metriccard__action {
+  position: absolute;
+  z-index: 6;
+  top: calc(var(--action) / var(--ref) * 100%);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.pactra-metriccard__action .pactra-button {
+  width: calc(111 * var(--u));
+  height: calc(45 * var(--u));
+  font-size: calc(14 * var(--u));
+}

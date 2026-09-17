@@ -1,0 +1,172 @@
+/* ==========================================================================
+   Checkbox, Radio, Toggle.
+   ========================================================================== */
+
+.pactra-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pactra-space-3);
+}
+
+.pactra-choice__box {
+  position: relative;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  margin-top: 1px;
+  border: 1px solid var(--pactra-hairline);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--pactra-shadow-inset-well);
+  color: transparent;
+  transition: background var(--pactra-dur-control) var(--pactra-ease-settle),
+    border-color var(--pactra-dur-control) var(--pactra-ease-settle),
+    box-shadow var(--pactra-dur-control) var(--pactra-ease-settle),
+    color var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+
+.pactra-choice__box--check { border-radius: var(--pactra-radius-2); }
+.pactra-choice__box--radio { border-radius: var(--pactra-radius-pill); }
+
+.pactra-choice__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.pactra-choice__input:disabled { cursor: not-allowed; }
+
+.pactra-choice__box:hover {
+  border-color: rgba(34, 34, 34, 0.24);
+  background: #fff;
+}
+
+.pactra-choice__input:checked ~ .pactra-choice__mark,
+.pactra-choice__input:indeterminate ~ .pactra-choice__mark {
+  opacity: 1;
+}
+
+.pactra-choice__box:has(.pactra-choice__input:checked),
+.pactra-choice__box:has(.pactra-choice__input:indeterminate) {
+  border-color: transparent;
+  background: var(--pactra-glaze-rose);
+  background-origin: border-box;
+  box-shadow: var(--pactra-shadow-control);
+  color: #fff;
+}
+
+.pactra-choice__box:has(.pactra-choice__input:focus-visible) {
+  outline: var(--pactra-focus-ring) solid var(--pactra-focus-on-paper);
+  outline-offset: 2px;
+}
+
+.pactra-choice__box:has(.pactra-choice__input:disabled) {
+  opacity: 0.45;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.pactra-choice__mark {
+  width: 13px;
+  height: 13px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+
+.pactra-choice__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--pactra-radius-pill);
+  background: currentColor;
+  transform: scale(0);
+  transition: transform var(--pactra-dur-control) var(--pactra-ease-settle);
+  pointer-events: none;
+}
+.pactra-choice__box:has(.pactra-choice__input:checked) .pactra-choice__dot { transform: scale(1); }
+
+.pactra-choice--invalid .pactra-choice__box { border-color: rgba(166, 59, 80, 0.55); }
+
+.pactra-choice__text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.pactra-choice__label {
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-body);
+  letter-spacing: var(--pactra-track-caption);
+  line-height: 1.35;
+  cursor: pointer;
+}
+
+.pactra-choice__description {
+  color: var(--pactra-copy-dim);
+  font-size: var(--pactra-size-micro);
+  letter-spacing: var(--pactra-track-caption);
+  line-height: 1.45;
+}
+
+/* ---- radio group --------------------------------------------------------- */
+.pactra-radiogroup { display: flex; flex-direction: column; gap: var(--pactra-space-3); }
+.pactra-radiogroup__label {
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-caption);
+  font-weight: var(--pactra-weight-medium);
+  letter-spacing: var(--pactra-track-caption);
+}
+.pactra-radiogroup__options { display: flex; flex-direction: column; gap: var(--pactra-space-3); }
+.pactra-radiogroup--horizontal .pactra-radiogroup__options {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--pactra-space-6);
+}
+
+/* ---- toggle -------------------------------------------------------------- */
+.pactra-toggle { display: flex; align-items: flex-start; gap: var(--pactra-space-3); }
+
+.pactra-toggle__track {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2px;
+  border: 1px solid var(--pactra-hairline);
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.09);
+  box-shadow: var(--pactra-shadow-inset-well);
+  cursor: pointer;
+  transition: background var(--pactra-dur-control) var(--pactra-ease-settle),
+    border-color var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+
+.pactra-toggle--md .pactra-toggle__track { width: 44px; height: 25px; }
+.pactra-toggle--sm .pactra-toggle__track { width: 36px; height: 21px; }
+
+.pactra-toggle__track--on { justify-content: flex-end; border-color: transparent; }
+.pactra-toggle__track--on[data-glaze="rose"] { background: var(--pactra-glaze-rose); }
+.pactra-toggle__track--on[data-glaze="violet"] { background: var(--pactra-glaze-violet); }
+.pactra-toggle__track--on[data-glaze="ember"] { background: var(--pactra-glaze-ember); }
+
+.pactra-toggle__track:disabled { opacity: 0.45; cursor: not-allowed; }
+.pactra-toggle__track:focus-visible {
+  outline: var(--pactra-focus-ring) solid var(--pactra-focus-on-paper);
+  outline-offset: 2px;
+}
+
+.pactra-toggle__thumb {
+  display: block;
+  border-radius: var(--pactra-radius-pill);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(58, 25, 39, 0.28);
+}
+.pactra-toggle--md .pactra-toggle__thumb { width: 19px; height: 19px; }
+.pactra-toggle--sm .pactra-toggle__thumb { width: 15px; height: 15px; }
+
+.pactra-toggle .pactra-choice__label { margin-top: 1px; }

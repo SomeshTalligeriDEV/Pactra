@@ -1,0 +1,58 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "lib": [
+      "ES2021",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    // packages/fixtures is consumed by tsc, by vite and by plain node (the
+    // Solidity emitter). Node needs the explicit extension; this lets the
+    // other two read the same file rather than forcing a second copy.
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "pactra-ui": [
+        "../ui/index.ts"
+      ],
+      "@pactra/fixtures": [
+        "../fixtures/src/index.ts"
+      ],
+      "@pactra/fixtures/preview": [
+        "../fixtures/src/preview.ts"
+      ],
+      "react": [
+        "./node_modules/@types/react"
+      ],
+      "react/*": [
+        "./node_modules/@types/react/*"
+      ],
+      "react-dom": [
+        "./node_modules/@types/react-dom"
+      ],
+      "react-dom/*": [
+        "./node_modules/@types/react-dom/*"
+      ],
+      "framer-motion": [
+        "./node_modules/framer-motion"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "vite.config.ts",
+    "../ui/**/*.ts",
+    "../ui/**/*.tsx"
+  ]
+}

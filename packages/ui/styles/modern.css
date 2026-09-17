@@ -1,0 +1,312 @@
+/* ==========================================================================
+   Bento, Segmented, Avatar, Skeleton, EmptyState, Sheet.
+   ========================================================================== */
+
+.pactra-bento {
+  display: grid;
+  grid-template-columns: repeat(var(--pactra-bento-columns, 4), minmax(0, 1fr));
+  grid-auto-rows: var(--pactra-bento-row, 160px);
+  grid-auto-flow: dense;
+  min-width: 0;
+}
+.pactra-bento--gap-sm { gap: var(--pactra-space-3); }
+.pactra-bento--gap-md { gap: var(--pactra-gap); }
+.pactra-bento--gap-lg { gap: var(--pactra-space-7); }
+
+.pactra-bento__cell { min-width: 0; display: flex; }
+.pactra-bento__surface {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--pactra-space-5);
+  overflow: hidden;
+}
+
+@media (max-width: 720px) {
+  .pactra-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pactra-bento__cell { grid-column: span 2 !important; }
+}
+
+/* ---- segmented ----------------------------------------------------------- */
+.pactra-segmented {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.05);
+  box-shadow: var(--pactra-shadow-inset-well);
+}
+.pactra-segmented--block { display: flex; width: 100%; }
+.pactra-segmented--block .pactra-segmented__option { flex: 1 1 0; }
+
+.pactra-segmented__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: var(--pactra-radius-pill);
+  background: transparent;
+  color: var(--pactra-copy-dim);
+  letter-spacing: var(--pactra-track-caption);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-segmented--md .pactra-segmented__option { height: 30px; padding: 0 15px; font-size: var(--pactra-size-caption); }
+.pactra-segmented--sm .pactra-segmented__option { height: 25px; padding: 0 11px; font-size: var(--pactra-size-micro); }
+.pactra-segmented__option > *:not(.pactra-segmented__thumb) { position: relative; z-index: 1; }
+.pactra-segmented__option:hover:not(:disabled) { color: var(--pactra-ink); }
+.pactra-segmented__option:disabled { opacity: 0.4; cursor: not-allowed; }
+.pactra-segmented__option:focus-visible { outline: 2px solid var(--pactra-focus-on-paper); outline-offset: 1px; }
+.pactra-segmented__option--active { color: var(--pactra-ink-strong); font-weight: var(--pactra-weight-medium); }
+
+.pactra-segmented__thumb {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: var(--pactra-shadow-control);
+}
+
+/* ---- avatar -------------------------------------------------------------- */
+.pactra-avatar {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: var(--pactra-radius-pill);
+  background: var(--pactra-glaze-rose);
+  background-origin: border-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-weight: var(--pactra-weight-medium);
+  letter-spacing: 0.01em;
+  user-select: none;
+}
+.pactra-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.pactra-avatar--xs { width: 22px; height: 22px; font-size: 9px; }
+.pactra-avatar--sm { width: 28px; height: 28px; font-size: 11px; }
+.pactra-avatar--md { width: 36px; height: 36px; font-size: 13px; }
+.pactra-avatar--lg { width: 48px; height: 48px; font-size: 17px; }
+.pactra-avatar--more { background: rgba(34, 34, 34, 0.1); color: var(--pactra-copy); }
+
+.pactra-avatar--online,
+.pactra-avatar--away,
+.pactra-avatar--busy { overflow: visible; }
+.pactra-avatar--online::after,
+.pactra-avatar--away::after,
+.pactra-avatar--busy::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 30%;
+  height: 30%;
+  border: 2px solid var(--pactra-paper);
+  border-radius: var(--pactra-radius-pill);
+}
+.pactra-avatar--online::after { background: var(--pactra-positive); }
+.pactra-avatar--away::after { background: var(--pactra-caution); }
+.pactra-avatar--busy::after { background: var(--pactra-critical); }
+
+.pactra-avatar-group { display: inline-flex; }
+.pactra-avatar-group > * + * { margin-left: -9px; }
+.pactra-avatar-group > * { box-shadow: 0 0 0 2px var(--pactra-paper), inset 0 1px 0 rgba(255, 255, 255, 0.28); }
+
+/* ---- skeleton ------------------------------------------------------------ */
+.pactra-skeleton {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--pactra-radius-2);
+  background: rgba(34, 34, 34, 0.07);
+}
+.pactra-skeleton--circle { border-radius: var(--pactra-radius-pill); }
+.pactra-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  /* The stage's own 102° sheen, sweeping. */
+  background: linear-gradient(102deg, transparent, rgba(255, 255, 255, 0.72) 46%, transparent);
+  animation: pactra-shimmer 1.5s var(--pactra-ease-support) infinite;
+}
+@keyframes pactra-shimmer { to { transform: translateX(100%); } }
+
+/* A skeleton is still a skeleton without the sweep: the block holds the shape
+   and the shape is the message. A reader who asked for no motion gets a
+   slightly darker block instead, so it still reads as pending. */
+@media (prefers-reduced-motion: reduce) {
+  .pactra-skeleton::after { animation: none; background: rgba(34, 34, 34, 0.04); transform: none; }
+}
+
+.pactra-skeleton-text { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+
+/* ---- empty state --------------------------------------------------------- */
+.pactra-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  padding: var(--pactra-space-10) var(--pactra-space-6);
+  text-align: center;
+}
+.pactra-empty__mark {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--pactra-space-2);
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(173, 49, 77, 0.07);
+  color: var(--pactra-accent);
+  font-size: 24px;
+}
+.pactra-empty__mark--ring {
+  box-shadow: 0 0 0 1px rgba(173, 49, 77, 0.14), 0 0 0 9px rgba(173, 49, 77, 0.05),
+    0 0 0 10px rgba(173, 49, 77, 0.09);
+}
+.pactra-empty__title { margin: 0; color: var(--pactra-ink-strong); font-size: var(--pactra-size-body); font-weight: var(--pactra-weight-medium); }
+.pactra-empty__description { margin: 0; max-width: 42ch; color: var(--pactra-copy-dim); font-size: var(--pactra-size-caption); line-height: var(--pactra-leading-caption); }
+.pactra-empty__action { margin-top: var(--pactra-space-3); }
+
+/* ---- sheet --------------------------------------------------------------- */
+.pactra-sheet-layer { position: fixed; inset: 0; z-index: var(--pactra-z-overlay); font-family: var(--pactra-font); }
+
+.pactra-sheet {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--pactra-panel);
+  background-origin: border-box;
+  box-shadow: var(--pactra-shadow-overlay);
+  outline: none;
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+}
+.pactra-sheet--bottom {
+  inset: auto 0 0;
+  border-top: 1px solid var(--pactra-glass-line);
+  border-radius: var(--pactra-radius-6) var(--pactra-radius-6) 0 0;
+}
+.pactra-sheet--right { inset: 0 0 0 auto; border-left: 1px solid var(--pactra-glass-line); }
+.pactra-sheet--left { inset: 0 auto 0 0; border-right: 1px solid var(--pactra-glass-line); }
+
+.pactra-sheet__grip {
+  width: 38px;
+  height: 4px;
+  margin: 9px auto 0;
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.16);
+  cursor: grab;
+}
+.pactra-sheet--right .pactra-sheet__grip,
+.pactra-sheet--left .pactra-sheet__grip { display: none; }
+
+.pactra-sheet__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pactra-space-4);
+  padding: var(--pactra-space-5) var(--pactra-space-6) var(--pactra-space-3);
+}
+.pactra-sheet__title { margin: 0; color: var(--pactra-ink-strong); font-size: 19px; font-weight: var(--pactra-weight-semibold); letter-spacing: var(--pactra-track-caption); }
+.pactra-sheet__description { margin: 3px 0 0; color: var(--pactra-copy); font-size: var(--pactra-size-caption); }
+.pactra-sheet__body { flex: 1 1 auto; overflow-y: auto; padding: 0 var(--pactra-space-6) var(--pactra-space-6); }
+.pactra-sheet__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--pactra-space-3);
+  padding: var(--pactra-space-4) var(--pactra-space-6);
+  border-top: 1px solid var(--pactra-hairline-soft);
+}
+
+/* ---- data table ---------------------------------------------------------- */
+.pactra-table__shell {
+  overflow: auto;
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-5);
+  background: rgba(255, 255, 255, 0.56);
+}
+
+/* The shell scrolls, so the table is allowed to keep its columns rather than
+   crushing them: at 800px the G7 comparison wrapped "A plain shared cap" over
+   three lines and the eye read it as three rows. */
+.pactra-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--pactra-size-caption);
+}
+
+.pactra-table thead th {
+  padding: 0 var(--pactra-space-4);
+  height: var(--pactra-row-h);
+  border-bottom: 1px solid var(--pactra-hairline);
+  background: rgba(250, 249, 248, 0.94);
+  color: var(--pactra-copy-dim);
+  font-size: 11px;
+  font-weight: var(--pactra-weight-semibold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pactra-table__head--sticky th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.pactra-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.pactra-table__sort:hover { color: var(--pactra-ink); }
+.pactra-table__sort:focus-visible { outline: 2px solid var(--pactra-focus-on-paper); outline-offset: 2px; border-radius: 3px; }
+.pactra-table__sort--active { color: var(--pactra-accent); }
+.pactra-table__sort-mark { display: inline-flex; font-size: 13px; }
+.pactra-table__sort-idle { opacity: 0; transition: opacity var(--pactra-dur-control) var(--pactra-ease-settle); }
+.pactra-table__sort:hover .pactra-table__sort-idle { opacity: 0.42; }
+
+.pactra-table tbody td {
+  height: var(--pactra-row-h);
+  padding: 0 var(--pactra-space-4);
+  border-bottom: 1px solid var(--pactra-hairline-soft);
+  color: var(--pactra-ink);
+  vertical-align: middle;
+}
+.pactra-table tbody tr:last-child td { border-bottom: 0; }
+.pactra-table tbody tr { transition: background var(--pactra-dur-control) var(--pactra-ease-settle); }
+.pactra-table tbody tr:hover { background: rgba(255, 255, 255, 0.72); }
+.pactra-table__row--clickable { cursor: pointer; }
+.pactra-table__row--selected { background: var(--pactra-accent-quiet); }
+.pactra-table__row--selected:hover { background: rgba(173, 49, 77, 0.16); }
+
+.pactra-table__cell--numeric { font-variant-numeric: tabular-nums; }
+.pactra-table__select { width: 42px; padding-left: var(--pactra-space-4) !important; }
+.pactra-table__select .pactra-choice { gap: 0; }
+.pactra-table__select .pactra-choice__box { margin-top: 0; }
+
+/* ---- sparkline ----------------------------------------------------------- */
+.pactra-sparkline { display: block; color: var(--pactra-accent); }
+.pactra-sparkline svg { display: block; max-width: 100%; overflow: visible; }
+.pactra-sparkline[data-glaze="violet"] { color: #9d4f9d; }
+.pactra-sparkline[data-glaze="ember"] { color: #d8542f; }
+.pactra-on-glaze .pactra-sparkline { color: var(--pactra-cream); }

@@ -1,0 +1,143 @@
+/* ==========================================================================
+   Button. The hero's "Learn More" pill is the secondary variant; everything
+   else is that pill under a different firing.
+   ========================================================================== */
+
+.pactra-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pactra-space-2);
+  border: 0;
+  border-radius: var(--pactra-radius-pill);
+  font-family: var(--pactra-font);
+  font-size: var(--pactra-size-control);
+  font-weight: var(--pactra-weight-regular);
+  letter-spacing: var(--pactra-track-control);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: box-shadow var(--pactra-dur-control) var(--pactra-ease-settle),
+    background-color var(--pactra-dur-control) var(--pactra-ease-settle),
+    color var(--pactra-dur-control) var(--pactra-ease-settle),
+    opacity var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+
+.pactra-button:focus-visible {
+  outline: var(--pactra-focus-ring) solid var(--pactra-focus-on-paper);
+  outline-offset: var(--pactra-focus-offset);
+}
+
+.pactra-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+/* ---- sizes --------------------------------------------------------------- */
+.pactra-button--sm {
+  height: var(--pactra-control-h-sm);
+  padding: 0 var(--pactra-space-4);
+  font-size: var(--pactra-size-micro);
+}
+.pactra-button--md {
+  height: var(--pactra-control-h);
+  padding: 0 var(--pactra-control-px);
+}
+.pactra-button--lg {
+  height: var(--pactra-control-h-lg);
+  padding: 0 var(--pactra-space-6);
+  font-size: var(--pactra-size-body);
+}
+
+.pactra-button--icon-only { padding: 0; aspect-ratio: 1; }
+.pactra-button--icon-only.pactra-button--sm { width: var(--pactra-control-h-sm); }
+.pactra-button--icon-only.pactra-button--md { width: var(--pactra-control-h); }
+.pactra-button--icon-only.pactra-button--lg { width: var(--pactra-control-h-lg); }
+
+.pactra-button--block { display: flex; width: 100%; }
+
+.pactra-button__icon { font-size: 1.15em; }
+
+/* ---- primary: a fired pill ---------------------------------------------- */
+.pactra-button--primary {
+  color: var(--pactra-on-glaze);
+  box-shadow: var(--pactra-shadow-tile);
+  background-origin: border-box;
+}
+.pactra-button--primary[data-glaze="rose"] { background: var(--pactra-glaze-rose); }
+.pactra-button--primary[data-glaze="violet"] { background: var(--pactra-glaze-violet); }
+.pactra-button--primary[data-glaze="ember"] { background: var(--pactra-glaze-ember); }
+.pactra-button--primary:hover:not(:disabled) { box-shadow: var(--pactra-shadow-lift); }
+
+/* ---- secondary: the hero's own white pill ------------------------------- */
+.pactra-button--secondary {
+  color: #2d2d2d;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: var(--pactra-shadow-control);
+}
+.pactra-button--secondary:hover:not(:disabled) { box-shadow: var(--pactra-shadow-lift); }
+
+/* ---- ghost --------------------------------------------------------------- */
+.pactra-button--ghost {
+  color: var(--pactra-copy);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--pactra-hairline);
+}
+.pactra-button--ghost:hover:not(:disabled) {
+  color: var(--pactra-ink);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 0 0 1px var(--pactra-hairline), var(--pactra-shadow-control);
+}
+
+/* ---- glaze: sits ON a glazed surface, so it borrows the glass rim ------- */
+.pactra-button--glaze {
+  color: var(--pactra-on-glaze);
+  background: var(--pactra-glass-fill);
+  box-shadow: inset 0 0 0 1px var(--pactra-glass-line);
+  -webkit-backdrop-filter: blur(var(--pactra-glass-blur)) saturate(var(--pactra-glass-saturate));
+  backdrop-filter: blur(var(--pactra-glass-blur)) saturate(var(--pactra-glass-saturate));
+}
+.pactra-button--glaze:hover:not(:disabled) { background: var(--pactra-glass-fill-strong); }
+.pactra-button--glaze:focus-visible { outline-color: var(--pactra-focus-on-glaze); }
+
+/* ---- danger -------------------------------------------------------------- */
+.pactra-button--danger {
+  color: var(--pactra-on-glaze);
+  background: var(--pactra-critical-glaze);
+  box-shadow: var(--pactra-shadow-tile);
+}
+.pactra-button--danger:hover:not(:disabled) { box-shadow: var(--pactra-shadow-lift); }
+
+/* ---- loading ------------------------------------------------------------- */
+.pactra-button__spinner {
+  font-size: 1.15em;
+  animation: pactra-spin 0.9s linear infinite;
+}
+@keyframes pactra-spin { to { transform: rotate(360deg); } }
+
+/* ---- CTA ----------------------------------------------------------------- */
+.pactra-cta--stacked {
+  height: auto;
+  padding: var(--pactra-space-4) var(--pactra-space-6);
+  border-radius: var(--pactra-radius-6);
+}
+.pactra-cta--stacked .pactra-button__label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+}
+.pactra-cta__label {
+  font-size: var(--pactra-size-body);
+  font-weight: var(--pactra-weight-medium);
+  line-height: 1.2;
+}
+.pactra-cta__hint {
+  font-size: var(--pactra-size-micro);
+  font-weight: var(--pactra-weight-regular);
+  letter-spacing: var(--pactra-track-caption);
+  opacity: 0.72;
+}

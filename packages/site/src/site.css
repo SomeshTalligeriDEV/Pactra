@@ -1,0 +1,1370 @@
+/* ==========================================================================
+   Pactra — site.
+
+   The design system supplies the material; this file supplies the room. The
+   landing deliberately breaks out of the library's default rhythm: bigger
+   type, fewer words, more air, and one figure per idea. A marketing page that
+   looks like a component gallery is a component gallery.
+   ========================================================================== */
+
+/* No global smooth scrolling. It turns every programmatic scroll — including
+   the one that puts a new route at the top — into an animation, and an
+   animation that never gets a frame never finishes. Anchors opt in instead. */
+html, body { margin: 0; background: var(--pactra-paper); }
+/* The nav is sticky and 62px tall, so anything landed on by anchor has to
+   clear it. `:target` covers a hash the browser resolved; the section rule
+   covers the same landing made by `scrollIntoView`, which reads the
+   target's own scroll-margin and not the URL's. */
+:target,
+main > section[id],
+#top { scroll-margin-top: 84px; }
+#root { min-height: 100svh; }
+body { font-family: var(--pactra-font); color: var(--pactra-ink); }
+
+::selection { background: rgba(173, 49, 77, 0.16); }
+
+/* Belt and braces. If an entrance has not finished within 1.6s — a paused
+   frame loop, a blocked script, a device too slow — every animated element is
+   forced into view. A marketing page that needs JavaScript to become visible
+   is a marketing page that is sometimes blank. */
+html.entrance-done .appear {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  filter: none !important;
+}
+
+.shell { display: flex; flex-direction: column; min-height: 100svh; }
+main { flex: 1 1 auto; }
+
+.wrap { width: min(100% - 2 * var(--pactra-gutter), 1180px); margin-inline: auto; }
+.wrap--narrow { width: min(100% - 2 * var(--pactra-gutter), 820px); margin-inline: auto; }
+
+/* ---- nav ----------------------------------------------------------------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--pactra-z-sticky);
+  transition: background 0.24s var(--pactra-ease-settle), border-color 0.24s var(--pactra-ease-settle);
+  border-bottom: 1px solid transparent;
+}
+.nav--lifted {
+  background: rgba(236, 236, 234, 0.78);
+  border-bottom-color: var(--pactra-hairline-soft);
+  -webkit-backdrop-filter: blur(16px) saturate(1.08);
+  backdrop-filter: blur(16px) saturate(1.08);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-6);
+  width: min(100% - 2 * var(--pactra-gutter), 1180px);
+  height: 62px;
+  margin-inline: auto;
+}
+.nav__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The word beside the mark: "docs" on the docs, "record" on a record page.
+   The landing carries none, because a bar that labels the front page tells a
+   reader where they already know they are. */
+.nav__mark {
+  color: var(--pactra-copy-dim);
+  font-size: 11.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* On a phone the bar was 22px wider than the screen, so every record page
+   scrolled sideways — the whole page, not the bar. The word beside the mark
+   is the one thing in it that repeats what the page already says, so it is
+   the one thing that goes. */
+@media (max-width: 460px) {
+  .nav__inner { gap: var(--pactra-space-4); }
+  .nav__mark { display: none; }
+}
+
+/* The bar has to end where the page under it ends. The landing's own column
+   is 1180, the docs grid is 1400, and the record pages run in a wide
+   container; a bar capped anywhere else reads as a second, narrower page
+   sitting on the first. */
+.nav__inner--wide { width: min(100% - 2 * var(--pactra-gutter), 1400px); }
+.nav__inner--page { width: min(100% - 2 * var(--pactra-gutter), 1600px); }
+
+.nav__end { display: flex; align-items: center; gap: var(--pactra-space-2); margin-left: auto; }
+.nav__link {
+  padding: 7px 13px;
+  border-radius: var(--pactra-radius-pill);
+  color: var(--pactra-copy-dim);
+  font-size: 13.5px;
+  letter-spacing: -0.012em;
+  text-decoration: none;
+  transition: color 0.18s var(--pactra-ease-settle), background 0.18s var(--pactra-ease-settle);
+}
+.nav__link:hover { color: var(--pactra-ink); background: rgba(34, 34, 34, 0.05); }
+/* The page you are on, named rather than hidden. Dropping the link on the docs
+   was what made that bar look like a different bar. */
+.nav__link--current { color: var(--pactra-ink); background: rgba(34, 34, 34, 0.05); }
+
+.nav__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--pactra-radius-pill);
+  color: var(--pactra-copy-dim);
+  transition: color 0.18s var(--pactra-ease-settle), background 0.18s var(--pactra-ease-settle);
+}
+.nav__icon:hover { color: var(--pactra-ink); background: rgba(34, 34, 34, 0.05); }
+
+/* ---- section rhythm ------------------------------------------------------ */
+.section { padding: clamp(64px, 11vh, 132px) 0; }
+.section--tight { padding: clamp(40px, 7vh, 84px) 0; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 var(--pactra-space-5);
+  color: var(--pactra-copy-dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.eyebrow::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--pactra-accent);
+}
+
+/* Display type. The landing is allowed to be loud; the inner pages are not. */
+.display {
+  margin: 0;
+  color: var(--pactra-ink-strong);
+  font-size: clamp(40px, 7.4vw, 96px);
+  font-weight: 400;
+  letter-spacing: -0.028em;
+  line-height: 0.98;
+}
+.display--page { font-size: clamp(34px, 5.4vw, 64px); letter-spacing: -0.024em; line-height: 1.03; }
+.display__line { display: block; }
+.display__dim { color: rgba(34, 34, 34, 0.34); }
+
+.lede {
+  max-width: 54ch;
+  margin: var(--pactra-space-6) 0 0;
+  color: var(--pactra-copy);
+  font-size: clamp(16px, 1.5vw, 19px);
+  letter-spacing: -0.014em;
+  line-height: 1.62;
+}
+
+.dot-word { display: inline-block; color: var(--pactra-accent); vertical-align: -0.06em; }
+
+/* ---- hero ---------------------------------------------------------------- */
+.hero { position: relative; padding: clamp(56px, 12vh, 132px) 0 clamp(48px, 8vh, 96px); overflow: hidden; }
+.hero__bg {
+  position: absolute;
+  /* Kept inside the viewport: a negative horizontal inset here widens the
+     document even though the hero clips it. */
+  inset: -20% 0 auto;
+  height: 620px;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 46% 52% at 18% 8%, rgba(255, 226, 226, 0.5), transparent 68%),
+    radial-gradient(ellipse 40% 46% at 82% 4%, rgba(228, 220, 255, 0.42), transparent 68%),
+    radial-gradient(ellipse 52% 40% at 62% 40%, rgba(255, 210, 190, 0.3), transparent 70%);
+  filter: blur(6px);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(28px, 5vw, 72px);
+  /* Centred against the copy. Bottom-aligned, the figure sank to the buttons'
+     baseline and left the top right of the hero empty. */
+  align-items: center;
+}
+.hero__actions { display: flex; flex-wrap: wrap; gap: var(--pactra-space-3); margin-top: var(--pactra-space-7); }
+/* The drawing sits on the page. The soft wash behind it separates it from the
+   copy without drawing a box, which is the whole point: a card around the
+   mechanism turns it into a picture of a product. */
+.hero__figure { position: relative; }
+.hero__figure::before {
+  content: "";
+  position: absolute;
+  inset: -6% -8% -10%;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 55% 45%, rgba(255, 255, 255, 0.72), transparent 68%);
+  filter: blur(14px);
+}
+
+/* ---- claim: the sentence the whole project turns on ---------------------- */
+.claim {
+  margin: 0;
+  color: var(--pactra-ink-strong);
+  font-size: clamp(24px, 3.6vw, 44px);
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+.claim em { font-style: normal; color: var(--pactra-accent); }
+.claim__source { display: block; margin-top: var(--pactra-space-5); color: var(--pactra-copy-dim); font-size: 12.5px; letter-spacing: 0.01em; }
+
+/* ---- counterfactual ------------------------------------------------------ */
+.counter { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--pactra-gap); }
+.counter__panel { display: flex; flex-direction: column; padding: var(--pactra-space-6); }
+.counter__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--pactra-space-4); margin-bottom: var(--pactra-space-4); }
+.counter__name { color: var(--pactra-ink-strong); font-size: 15px; font-weight: 500; letter-spacing: -0.015em; }
+.counter__note { color: var(--pactra-copy-dim); font-size: 12.5px; letter-spacing: -0.01em; }
+.counter__note--live { color: var(--pactra-accent); }
+
+/* The four checks, as four lines under the drawings that just ran them. */
+.checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--pactra-space-4) var(--pactra-space-7);
+  margin: var(--pactra-space-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.checks__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--pactra-space-4);
+  padding-top: var(--pactra-space-4);
+  border-top: 1px solid var(--pactra-hairline-soft);
+  color: var(--pactra-copy);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.checks__index {
+  flex: none;
+  color: var(--pactra-accent);
+  font-family: "JetBrains Mono", var(--pactra-font-mono);
+  font-size: 12px;
+}
+.checks__foot { margin: var(--pactra-space-5) 0 0; color: var(--pactra-copy-dim); font-size: 13px; }
+
+/* ---- the tree ------------------------------------------------------------ */
+.tree { position: relative; width: 100%; }
+.tree__canvas { position: relative; width: 100%; }
+.tree svg { display: block; overflow: visible; }
+
+.tree__edge { fill: none; stroke: rgba(140, 19, 32, 0.16); stroke-width: 1.1; }
+.tree__edge-live { fill: none; stroke: var(--pactra-accent); stroke-width: 1.8; stroke-linecap: round; }
+.tree__edge-refused { fill: none; stroke: #8c1320; stroke-width: 1.8; stroke-linecap: round; stroke-dasharray: 3 3; }
+
+.tree__ring { fill: none; stroke: rgba(140, 19, 32, 0.12); stroke-width: 2; }
+.tree__ring-used { fill: none; stroke: var(--pactra-accent); stroke-width: 2; stroke-linecap: round; transition: stroke-dasharray 0.4s var(--pactra-ease-settle); }
+.tree__ring-breached { fill: none; stroke: #d8542f; stroke-width: 2.6; stroke-linecap: round; }
+
+.tree__node { fill: #fff; stroke: rgba(140, 19, 32, 0.2); stroke-width: 1; }
+.tree__node--d0 { fill: var(--pactra-accent); stroke: none; }
+.tree__node--d1 { fill: rgba(173, 49, 77, 0.18); stroke: rgba(173, 49, 77, 0.34); }
+.tree__node--refused { fill: #8c1320; }
+
+.tree__label { fill: #fff; font-family: var(--pactra-font); font-size: 9.5px; letter-spacing: 0.04em; text-anchor: middle; }
+
+.tree__status {
+  margin-top: var(--pactra-space-4);
+  min-height: 34px;
+  color: var(--pactra-copy-dim);
+  font-size: 12.5px;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+.tree__status[data-state="refused"] { color: var(--pactra-critical); }
+.tree__status[data-state="over"] { color: #b8461f; }
+
+/* ---- allowances: what was signed, and what was handed out ---------------- */
+/* The hero figure. Two bars on one measured scale, and the second one is
+   longer than the first. The labels are the figures the bars are drawn from,
+   printed once each: the drawing ran wordless for a while and read as two pink
+   rectangles, which is a proportion nobody was given a reason to compare. */
+.allow { width: 100%; }
+.allow__stack { position: relative; display: flex; flex-direction: column; }
+
+/* The rail. Divisions rather than numbers: it says the two bars are measured
+   against one thing without claiming what that thing is. */
+.allow__rail {
+  position: relative;
+  /* Ticks hang down off a top line. Read the other way up they looked like a
+     bar chart of their own, which is the last thing a scale should look
+     like. */
+  height: 13px;
+  border-top: 1px solid rgba(166, 59, 80, 0.42);
+}
+.allow__tick {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 5px;
+  border-left: 1px solid rgba(166, 59, 80, 0.42);
+}
+/* The division the signed window ends on, drawn the full depth of the rail:
+   the bound is a fact about the scale rather than an annotation on top of it. */
+.allow__tick[data-bound] {
+  height: 13px;
+  border-left: 1.5px solid var(--pactra-ink-strong);
+}
+
+/* What the bar under it measures, and the figure it reaches. */
+.allow__key {
+  position: relative;
+  margin: var(--pactra-space-5) 0 6px;
+  color: var(--pactra-copy-dim);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.allow__figure {
+  position: absolute;
+  bottom: 0;
+  /* Sits over the end of its own bar, so the number and the length it
+     describes are one object. */
+  transform: translateX(-100%);
+  padding-right: 9px;
+  color: var(--pactra-ink-strong);
+  font-family: var(--pactra-font-mono);
+  font-size: 12.5px;
+  letter-spacing: -0.01em;
+}
+.allow__figure--end { right: 0; left: auto; transform: none; padding-right: 0; }
+
+.allow__row { position: relative; display: flex; align-items: stretch; height: clamp(46px, 7vh, 62px); }
+
+/* Every bar is a box with a fill behind it. The fill is the only thing that
+   moves, so a frame that never arrives costs the figure its entrance and
+   nothing else. */
+.allow__signed,
+.allow__seg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 3px;
+}
+.allow__seg + .allow__seg { margin-left: 3px; }
+
+.allow__fill {
+  position: absolute;
+  inset: 0;
+  /* Not a negative z-index: body carries the page's background, and a
+     descendant behind zero paints under it. */
+  z-index: 0;
+  transform-origin: left center;
+  border: 1px solid var(--pactra-accent-line);
+  border-radius: inherit;
+  background: linear-gradient(168deg, rgba(173, 49, 77, 0.2), rgba(173, 49, 77, 0.1));
+}
+/* The signed window is the one thing here that is real money, so it is the
+   one bar that is solid. */
+.allow__fill--signed {
+  border-color: transparent;
+  background: linear-gradient(168deg, var(--pactra-rose-1), var(--pactra-rose-3));
+}
+
+/* Each worker's own limit, inside its own bar. Both are under the window, and
+   a reader who cannot see the two numbers cannot check that. */
+/* Left-aligned inside its own bar, not centred: the second worker's bar runs
+   past the bound, and a centred figure landed in the middle of the hatching,
+   where it read as a label for the overrun rather than for the limit. */
+.allow__seg-value {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-left: 11px;
+  text-align: left;
+  color: var(--pactra-accent);
+  font-family: var(--pactra-font-mono);
+  font-size: 12px;
+  letter-spacing: -0.01em;
+}
+
+/* Hatched, not filled: permission the root cannot fund. No right-hand edge,
+   because nothing downstream is what stops it. */
+.allow__over {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 0 3px 3px 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(166, 59, 80, 0.5) 0 1.5px,
+    transparent 1.5px 6px
+  );
+}
+
+/* The tail, named. It is exactly as wide as the hatching above it, so the
+   sentence and the shape it describes start and end together. */
+.allow__over-key {
+  margin: 7px 0 0 auto;
+  color: var(--pactra-critical);
+  font-size: 11.5px;
+  letter-spacing: 0.01em;
+  text-align: center;
+  line-height: 1;
+}
+
+.allow__bound {
+  position: absolute;
+  /* Continues the rail's tall tick down through both bars. The tick and this
+     line are the same fact and should look like one mark. */
+  top: 13px;
+  bottom: 24px;
+  z-index: 2;
+  width: 0;
+  border-left: 1.5px dashed var(--pactra-ink-strong);
+  pointer-events: none;
+}
+
+/* ---- figure panels ------------------------------------------------------- */
+.panel { padding: var(--pactra-space-7); }
+.panel__label { margin: 0 0 var(--pactra-space-2); color: var(--pactra-copy-dim); font-size: 12px; letter-spacing: -0.01em; }
+.panel__note { margin: var(--pactra-space-4) 0 0; color: var(--pactra-copy-dim); font-size: 12.5px; line-height: 1.5; }
+
+/* The rule from CLAUDE.md, rendered: no figure without its enforcing function. */
+.enforced {
+  /* Inside a flex column it would stretch the full width and read as a bar
+     rather than a caption. */
+  align-self: flex-start;
+  width: max-content;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--pactra-space-3);
+  padding: 4px 9px;
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-2);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--pactra-copy-dim);
+  font-family: "JetBrains Mono", var(--pactra-font-mono);
+  font-size: 11px;
+}
+.enforced::before { content: ""; width: 4px; height: 4px; border-radius: 999px; background: var(--pactra-positive); }
+
+.stat { display: flex; flex-direction: column; gap: 6px; }
+.stat__value { display: flex; align-items: flex-end; gap: 7px; color: var(--pactra-ink-strong); }
+
+/* The dot face is sized by height here, not width: a figure's glyph count
+   changes its width, and a row of stats has to keep one cap height. */
+.stat__dots { height: clamp(30px, 3.4vw, 44px); }
+.stat__dots svg { width: auto; height: 100%; }
+.stat__unit { font-size: clamp(15px, 1.6vw, 20px); color: var(--pactra-copy-dim); }
+.stat__label { color: var(--pactra-copy-dim); font-size: 12.5px; letter-spacing: -0.01em; }
+
+.mono { font-family: "JetBrains Mono", var(--pactra-font-mono); font-size: 12.5px; }
+
+.code {
+  margin: var(--pactra-space-4) 0 0;
+  padding: var(--pactra-space-5);
+  overflow-x: auto;
+  border-radius: var(--pactra-radius-4);
+  background: rgba(34, 34, 34, 0.045);
+  color: var(--pactra-ink);
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+
+/* ---- lists that are not paragraphs --------------------------------------- */
+.points { display: grid; gap: var(--pactra-space-6); margin: 0; padding: 0; list-style: none; }
+.points--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.points--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.points__item { display: flex; flex-direction: column; gap: 7px; }
+.points__title { color: var(--pactra-ink-strong); font-size: 16px; font-weight: 500; letter-spacing: -0.016em; }
+.points__body { margin: 0; color: var(--pactra-copy); font-size: 14px; line-height: 1.6; }
+
+.rule { height: 1px; margin: 0; border: 0; background: var(--pactra-hairline-soft); }
+
+/* ---- cta ----------------------------------------------------------------- */
+.cta { padding: clamp(40px, 6vw, 72px); text-align: center; }
+.cta__actions { display: flex; flex-wrap: wrap; gap: var(--pactra-space-3); justify-content: center; margin-top: var(--pactra-space-7); }
+
+/* ---- footer -------------------------------------------------------------- */
+.foot { border-top: 1px solid var(--pactra-hairline-soft); padding: var(--pactra-space-9) 0; }
+.foot__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--pactra-space-4);
+  width: min(100% - 2 * var(--pactra-gutter), 1180px);
+  margin-inline: auto;
+  text-align: center;
+}
+.foot__line { margin: 0; color: var(--pactra-copy); font-size: 14px; }
+.foot__links { display: flex; flex-wrap: wrap; gap: var(--pactra-space-5); }
+.foot__links a { color: var(--pactra-copy-dim); font-size: 13px; text-decoration: none; }
+.foot__links a:hover { color: var(--pactra-ink); }
+.foot__meta { margin: 0; color: rgba(34, 34, 34, 0.34); font-size: 11.5px; }
+
+/* ---- responsive ---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .hero__grid { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .counter { grid-template-columns: minmax(0, 1fr); }
+  .points--3, .points--2 { grid-template-columns: minmax(0, 1fr); }
+
+  .checks { grid-template-columns: minmax(0, 1fr); }
+}
+
+
+/* ==========================================================================
+   The public record — /drill, /agent/<id>, /attest/<id>.
+
+   These pages came from the console, because that is where they were built.
+   They belong here: none of them is gated, and /agent/<id> is the one surface
+   made to be shared. What follows is the room they need, kept apart from the
+   landing's rhythm above so that changing one does not quietly restyle the
+   other.
+   ========================================================================== */
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Present to the document outline and to a screen reader, absent to the eye.
+   For a heading a component already shows in its own type. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The first thing in the tab order, and invisible until it is focused. A
+   keyboard reader should not have to walk the whole bar on every page. */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 0 0 var(--pactra-radius-3) 0;
+  background: var(--pactra-ink);
+  color: var(--pactra-paper);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.skip:focus {
+  left: 0;
+}
+
+/* ---- page rhythm --------------------------------------------------------- */
+
+.public {
+  flex: 1 1 auto;
+  padding-block: clamp(32px, 6vh, 72px) clamp(56px, 10vh, 120px);
+}
+
+.stackpage,
+.public__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pactra-space-8);
+}
+
+.public__head {
+  align-items: flex-start;
+  gap: var(--pactra-space-3);
+}
+
+.public__lede {
+  max-width: 66ch;
+}
+
+.enforced__dot {
+  flex: 0 0 auto;
+  align-self: center;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--pactra-radius-pill);
+  background: var(--pactra-positive);
+}
+
+/* ---- the few product-specific shapes ------------------------------------- */
+
+.kv {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--pactra-space-4) var(--pactra-space-5);
+  margin: 0 0 var(--pactra-space-4);
+}
+
+.kv--rows {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+}
+
+.kv > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.kv--rows > div {
+  flex-direction: row;
+  align-items: baseline;
+  gap: var(--pactra-space-5);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--pactra-hairline-soft);
+}
+
+.kv--rows > div:last-child {
+  border-bottom: 0;
+}
+
+.kv dt {
+  color: var(--pactra-copy-dim);
+  font-size: var(--pactra-size-micro);
+  letter-spacing: 0.02em;
+}
+
+.kv--rows dt {
+  flex: 0 0 168px;
+}
+
+.kv dd {
+  margin: 0;
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-caption);
+  min-width: 0;
+}
+
+.kv__break {
+  word-break: break-all;
+}
+
+.code {
+  margin: 0 0 var(--pactra-space-5);
+  padding: var(--pactra-space-5);
+  overflow-x: auto;
+  border-radius: var(--pactra-radius-4);
+  background: var(--pactra-paper-dim);
+  box-shadow: var(--pactra-shadow-inset-well);
+  color: var(--pactra-ink);
+  line-height: 1.7;
+}
+
+/* The attestation body is the page's exhibit, not its content: a reader wants
+   to see its shape and then read what is beside it. Left uncapped it runs
+   three screens and pushes the argument off the bottom. */
+.code--body { max-height: min(58vh, 460px); overflow: auto; }
+
+/* A supporting figure: ordinary tabular numerals, because the LED face is
+   rationed to the one figure a view exists to show. */
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.figure__value {
+  color: var(--pactra-ink-strong);
+  font-size: var(--pactra-size-lead);
+  letter-spacing: var(--pactra-track-lead);
+}
+
+/* A figure slot sets type for a short number, and an endpoint path is neither
+   short nor a number. Left in the default slot, the refused counterparty
+   measured 374px inside a 280px box and was clipped with no scrollbar, so the
+   end of the URL was simply not on the page — and the counterparty is the
+   thing the concentration bound is about. It wraps here, anywhere, because a
+   path has no spaces to break at. */
+.figure__value--path {
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: -0.004em;
+  overflow-wrap: anywhere;
+}
+
+.figure__label {
+  color: var(--pactra-copy);
+  font-size: var(--pactra-size-caption);
+}
+
+.cell__id,
+.cell__cp,
+.treemeta {
+  color: var(--pactra-copy-dim);
+  font-size: 11.5px;
+}
+
+.gate__id {
+  color: var(--pactra-accent);
+}
+
+/* The count beside a gate is recorded from the run that produced it, so it
+   sits with the status rather than anywhere a reader has to go looking. */
+.gate__status {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* ---- statements on glaze ------------------------------------------------- */
+
+.drill,
+.compare__panel {
+  padding: clamp(24px, 3vw, 40px);
+}
+
+.drill {
+  display: grid;
+  /* The dial had 320px against a column of text three times its width, which
+     reads as an illustration beside the argument rather than as the result. */
+  grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+}
+
+@media (max-width: 860px) {
+.drill {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The readout is what this page is for. It was set at 30px in the dim
+   on-glaze colour, left of a column of body copy that outweighed it, so the
+   one measured number on the page was the quietest thing on it. */
+.drill__readout {
+  font-size: clamp(40px, 4.4vw, 58px);
+  line-height: 1;
+  color: var(--pactra-on-glaze);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.drill__statement,
+.compare {
+  margin: 0 0 var(--pactra-space-4);
+  color: var(--pactra-on-glaze);
+  font-size: var(--pactra-size-lead);
+  font-weight: 500;
+  letter-spacing: var(--pactra-track-lead);
+  line-height: var(--pactra-leading-lead);
+}
+
+.compare em {
+  font-style: normal;
+  color: var(--pactra-on-glaze-soft);
+}
+
+.outcomes {
+  margin: 0 0 var(--pactra-space-5);
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--pactra-space-3);
+}
+
+.outcomes li {
+  color: var(--pactra-on-glaze-soft);
+  font-size: var(--pactra-size-caption);
+  line-height: var(--pactra-leading-body);
+}
+
+.outcomes b {
+  color: var(--pactra-on-glaze);
+  font-weight: 500;
+}
+
+.pane__foot {
+  margin: var(--pactra-space-5) 0 0;
+  color: var(--pactra-copy-dim);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+.drill .pane__foot,
+.compare__panel .pane__foot {
+  color: var(--pactra-on-glaze-soft);
+}
+
+/* A sentence that limits what the figures above it mean, rather than another
+   sentence reporting them. It gets a rule and a little air instead of a
+   colour, because colour on this panel already means something. */
+.pane__foot--aside {
+  padding: var(--pactra-space-3) 0 0;
+  margin-top: var(--pactra-space-3);
+  border-top: 1px solid rgba(255, 214, 228, 0.32);
+}
+
+/* A figure the contract bounds only as a declaration. The colour is the same
+   one every other caution in this system uses, so the reader does not have to
+   learn a new signal to notice the difference. */
+.enforced[data-strength="declared"]::before,
+.enforced[data-strength="declared"] .enforced__dot {
+  background: var(--pactra-caution);
+}
+
+.enforced__strength {
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--pactra-caution);
+}
+
+
+/* ==========================================================================
+   Docs.
+
+   A room for reading rather than for being persuaded. Three columns: contents,
+   the page, and the page's own headings. Nothing here animates in, because
+   documentation is read on slow connections and in background tabs, and a
+   paragraph that waits for a frame is a paragraph that is sometimes missing.
+   ========================================================================== */
+
+.docs { display: flex; flex-direction: column; min-height: 100svh; }
+
+.docs__menu {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--pactra-ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Keep the contents control and every destination reachable on small screens. */
+@media (max-width: 480px) {
+  .docs .nav__inner {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 62px;
+    padding-block: 10px;
+    gap: 8px;
+  }
+  .docs .docs__menu { margin-left: auto; }
+  .docs .nav__end {
+    flex: 1 0 100%;
+    justify-content: flex-end;
+  }
+}
+
+.docs__grid {
+  display: grid;
+  grid-template-columns: 244px minmax(0, 1fr) 208px;
+  gap: clamp(24px, 3.4vw, 56px);
+  width: min(100% - 2 * var(--pactra-gutter), 1400px);
+  margin-inline: auto;
+  padding-block: var(--pactra-space-8) var(--pactra-space-9);
+}
+
+.docs__side,
+.docs__toc {
+  position: sticky;
+  top: 82px;
+  align-self: start;
+  max-height: calc(100svh - 110px);
+  overflow-y: auto;
+}
+.docs__side ul,
+.docs__toc ul { margin: 0; padding: 0; list-style: none; }
+
+.docs__group { margin-bottom: var(--pactra-space-6); }
+.docs__group-title {
+  margin: 0 0 var(--pactra-space-3);
+  color: var(--pactra-copy-dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.docs__link {
+  display: block;
+  padding: 5px 10px;
+  margin-left: -10px;
+  border-radius: var(--pactra-radius-2);
+  color: var(--pactra-copy);
+  font-size: 13.5px;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: color 0.16s var(--pactra-ease-settle), background 0.16s var(--pactra-ease-settle);
+}
+.docs__link:hover { color: var(--pactra-ink); background: rgba(34, 34, 34, 0.05); }
+.docs__link--active {
+  color: var(--pactra-ink-strong);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--pactra-shadow-control);
+  font-weight: 500;
+}
+
+.docs__toc a {
+  display: block;
+  padding: 4px 0;
+  color: var(--pactra-copy-dim);
+  font-size: 12.5px;
+  line-height: 1.45;
+  text-decoration: none;
+}
+.docs__toc a:hover { color: var(--pactra-ink); }
+
+.docs__main { min-width: 0; }
+
+/* ---- the page itself ----------------------------------------------------- */
+.doc { max-width: 74ch; }
+.doc__head { margin-bottom: var(--pactra-space-7); }
+.doc__kicker {
+  margin: 0 0 var(--pactra-space-3);
+  color: var(--pactra-accent);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.doc__title {
+  margin: 0;
+  color: var(--pactra-ink-strong);
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 400;
+  letter-spacing: -0.024em;
+  line-height: 1.08;
+}
+
+.doc__lead {
+  margin: 0 0 var(--pactra-space-7);
+  color: var(--pactra-copy);
+  font-size: 17px;
+  line-height: 1.62;
+}
+
+.doc__h2 {
+  position: relative;
+  margin: clamp(34px, 5vh, 52px) 0 var(--pactra-space-4);
+  color: var(--pactra-ink-strong);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.018em;
+  scroll-margin-top: 96px;
+}
+.doc__h3 {
+  margin: var(--pactra-space-7) 0 var(--pactra-space-3);
+  color: var(--pactra-ink-strong);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.014em;
+  scroll-margin-top: 96px;
+}
+
+.doc__anchor {
+  position: absolute;
+  left: -1.1em;
+  color: var(--pactra-accent);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.16s var(--pactra-ease-settle);
+}
+.doc__h2:hover .doc__anchor { opacity: 1; }
+
+.doc__p { margin: 0 0 var(--pactra-space-4); color: var(--pactra-copy); font-size: 15px; line-height: 1.68; }
+.doc__ul, .doc__ol { margin: 0 0 var(--pactra-space-4); padding-left: 1.25em; color: var(--pactra-copy); font-size: 15px; line-height: 1.68; }
+.doc__ul li, .doc__ol li { margin-bottom: 6px; }
+.doc__ul li::marker { color: var(--pactra-accent); }
+
+.doc__inline {
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: rgba(34, 34, 34, 0.06);
+  font-size: 0.92em;
+}
+
+.doc__code {
+  position: relative;
+  margin: 0 0 var(--pactra-space-5);
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-4);
+  background: rgba(34, 34, 34, 0.045);
+}
+.doc__code pre {
+  margin: 0;
+  padding: var(--pactra-space-5);
+  overflow-x: auto;
+  color: var(--pactra-ink);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.doc__code-lang {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  color: var(--pactra-copy-dim);
+  font-family: "JetBrains Mono", var(--pactra-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.doc__note {
+  margin: 0 0 var(--pactra-space-5);
+  padding: var(--pactra-space-5);
+  border-left: 2px solid var(--pactra-accent);
+  border-radius: 0 var(--pactra-radius-3) var(--pactra-radius-3) 0;
+  background: rgba(255, 255, 255, 0.66);
+}
+.doc__note[data-tone="warn"] { border-left-color: #b8461f; }
+.doc__note[data-tone="good"] { border-left-color: var(--pactra-positive); }
+.doc__note-title { margin: 0 0 6px; color: var(--pactra-ink-strong); font-size: 13.5px; font-weight: 600; }
+.doc__note-body { color: var(--pactra-copy); font-size: 14px; line-height: 1.62; }
+.doc__note-body p { margin: 0; }
+
+.doc__table-wrap { margin: 0 0 var(--pactra-space-5); overflow-x: auto; }
+.doc__table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.doc__table th {
+  padding: 0 var(--pactra-space-4) 8px 0;
+  border-bottom: 1px solid var(--pactra-hairline);
+  color: var(--pactra-copy-dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.doc__table td {
+  padding: 10px var(--pactra-space-4) 10px 0;
+  border-bottom: 1px solid var(--pactra-hairline-soft);
+  color: var(--pactra-copy);
+  line-height: 1.55;
+  vertical-align: top;
+}
+.doc__table td:first-child { color: var(--pactra-ink-strong); }
+
+.doc__defs { margin: 0 0 var(--pactra-space-5); }
+.doc__defs > div {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: var(--pactra-space-4);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--pactra-hairline-soft);
+}
+.doc__defs dt { color: var(--pactra-ink-strong); font-size: 14px; font-weight: 500; }
+.doc__defs dt a { color: var(--pactra-accent); text-decoration: none; }
+.doc__defs dd { margin: 0; color: var(--pactra-copy); font-size: 14px; line-height: 1.6; }
+
+.doc__pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--pactra-gap);
+  margin-top: clamp(48px, 8vh, 88px);
+  padding-top: var(--pactra-space-6);
+  border-top: 1px solid var(--pactra-hairline-soft);
+}
+.doc__pager-link {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 16px;
+  border: 1px solid var(--pactra-hairline-soft);
+  border-radius: var(--pactra-radius-4);
+  background: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: border-color 0.16s var(--pactra-ease-settle), background 0.16s var(--pactra-ease-settle);
+}
+.doc__pager-link:hover { border-color: var(--pactra-accent); background: rgba(255, 255, 255, 0.9); }
+.doc__pager-link--next { text-align: right; }
+.doc__pager-dir { color: var(--pactra-copy-dim); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.doc__pager-title { color: var(--pactra-ink-strong); font-size: 14.5px; }
+
+@media (max-width: 1180px) {
+  .docs__grid { grid-template-columns: 224px minmax(0, 1fr); }
+  .docs__toc { display: none; }
+}
+
+@media (max-width: 860px) {
+  .docs__menu { display: block; }
+  .docs__grid { grid-template-columns: minmax(0, 1fr); }
+  .docs__side {
+    display: none;
+    position: static;
+    max-height: none;
+    padding-bottom: var(--pactra-space-6);
+    border-bottom: 1px solid var(--pactra-hairline-soft);
+  }
+  .docs__side--open { display: block; }
+  .doc__defs > div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+
+/* ---- the architecture figure --------------------------------------------
+   One drawing, fixed geometry, no measurement and no animation: it has to be
+   complete in a hidden tab and in a print. The type sizes are in user units
+   of the viewBox, so they scale with the figure rather than fighting it. */
+.arch { margin: 0 0 var(--pactra-space-6); }
+.arch svg { display: block; width: 100%; height: auto; }
+.arch__name {
+  fill: var(--pactra-ink-strong);
+  font-size: 19px;
+  font-weight: 560;
+  letter-spacing: -0.01em;
+}
+.arch__sub { fill: var(--pactra-copy-dim); font-size: 15px; }
+.arch__lane {
+  fill: var(--pactra-copy-dim);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.arch__edge { fill: var(--pactra-copy-dim); font-size: 14px; }
+.arch__step {
+  fill: var(--pactra-accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+.arch__caption {
+  margin: var(--pactra-space-3) 0 0;
+  color: var(--pactra-copy-dim);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+/* Two scenarios in one section, and the second needs air above it or the two
+   tables read as one with a stray heading in the middle. */
+.evalscenario + .evalscenario { margin-top: var(--pactra-space-6); }
+.evalscenario > .eyebrow { margin: 0 0 var(--pactra-space-2); }
+
+/* ---- one purchase: agent to seller --------------------------------------
+   The lane is plain layout with percentages, not a measured drawing, so it is
+   complete before any frame runs. The span and the pulse are the only things
+   that move, and both are drawn at their destination when nothing animates. */
+.buy {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: var(--pactra-gap);
+  align-items: start;
+}
+.buy__panel { display: flex; flex-direction: column; padding: var(--pactra-space-6); }
+
+.buy__head { display: flex; align-items: center; justify-content: space-between; gap: var(--pactra-space-4); }
+.buy__switch {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.05);
+}
+.buy__tab,
+.buy__play,
+.buy__step {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+.buy__tab {
+  padding: 7px 14px;
+  border-radius: var(--pactra-radius-pill);
+  color: var(--pactra-copy-dim);
+  font-size: 13px;
+  letter-spacing: -0.012em;
+  transition: color 0.18s var(--pactra-ease-settle), background 0.18s var(--pactra-ease-settle);
+}
+.buy__tab:hover { color: var(--pactra-ink); }
+.buy__tab[aria-selected="true"] { color: var(--pactra-ink-strong); background: #fff; box-shadow: 0 1px 2px rgba(34, 34, 34, 0.08); }
+.buy__play { color: var(--pactra-copy-dim); font-size: 12.5px; padding: 6px 4px; }
+.buy__play:hover { color: var(--pactra-ink); }
+
+.buy__lane { position: relative; margin: var(--pactra-space-8) 0 var(--pactra-space-6); }
+.buy__rail,
+.buy__span {
+  position: absolute;
+  top: 23px;
+  height: 2px;
+  border-radius: 2px;
+}
+.buy__rail { left: 12.5%; right: 12.5%; background: rgba(140, 19, 32, 0.12); }
+.buy__span { background: var(--pactra-accent); }
+.buy__span[data-refused] {
+  background: repeating-linear-gradient(90deg, #8c1320 0 5px, transparent 5px 9px);
+}
+.buy__pulse {
+  position: absolute;
+  top: 24px;
+  /* Under the stations: parked on one, the glyph covers it; between two, it
+     is the only thing on the rail. */
+  z-index: 0;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 999px;
+  background: var(--pactra-accent);
+  box-shadow: 0 0 0 4px rgba(173, 49, 77, 0.16), 0 0 14px rgba(173, 49, 77, 0.5);
+}
+.buy__pulse[data-refused] { background: #8c1320; box-shadow: 0 0 0 4px rgba(140, 19, 32, 0.16); }
+
+.buy__stations {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.buy__station { display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; }
+.buy__glyph {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid rgba(140, 19, 32, 0.16);
+  color: var(--pactra-copy-dim);
+  transition: color 0.3s var(--pactra-ease-settle), border-color 0.3s var(--pactra-ease-settle), box-shadow 0.3s var(--pactra-ease-settle);
+}
+.buy__glyph svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.buy__glyph svg .fill { fill: currentColor; stroke: none; }
+.buy__name { color: var(--pactra-ink-strong); font-size: 13.5px; font-weight: 500; letter-spacing: -0.012em; }
+.buy__sub { color: var(--pactra-copy-dim); font-size: 11.5px; }
+
+.buy__station[data-lit] .buy__glyph {
+  color: var(--pactra-accent);
+  border-color: rgba(173, 49, 77, 0.5);
+  box-shadow: 0 0 0 5px rgba(173, 49, 77, 0.08);
+}
+.buy__glyph { position: relative; }
+.buy__mark {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: var(--pactra-accent);
+}
+.buy__mark svg { width: 12px; height: 12px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.buy__station[data-mark="no"] .buy__mark { background: #8c1320; }
+.buy__station[data-mark] .buy__sub { color: var(--pactra-accent); font-weight: 500; }
+.buy__station[data-mark="no"] .buy__sub { color: #8c1320; }
+.buy__station[data-mark="ok"] .buy__glyph { color: var(--pactra-accent); border-color: rgba(173, 49, 77, 0.5); }
+.buy__station:nth-child(3)[data-mark="no"] .buy__glyph {
+  color: #fff;
+  background: #8c1320;
+  border-color: #8c1320;
+  box-shadow: 0 0 0 5px rgba(140, 19, 32, 0.12);
+}
+.buy__station[data-muted] .buy__glyph,
+.buy__station[data-muted] .buy__name { opacity: 0.45; }
+.buy__station[data-muted] .buy__sub { color: #8c1320; }
+
+/* The leg to the seller, severed once the contract has said no. The rail stops
+   at Arc, so this draws on empty space and needs no background to hide it. */
+.buy__cut {
+  position: absolute;
+  top: 19px;
+  height: 10px;
+  background:
+    linear-gradient(135deg, transparent 42%, #8c1320 42%, #8c1320 58%, transparent 58%) center / 10px 10px no-repeat,
+    linear-gradient(45deg, transparent 42%, #8c1320 42%, #8c1320 58%, transparent 58%) center / 10px 10px no-repeat;
+}
+@media (max-width: 460px) {
+  .buy__cut { top: 15px; }
+}
+
+.buy__readout {
+  min-height: 176px;
+  padding-top: var(--pactra-space-5);
+  border-top: 1px solid var(--pactra-hairline-soft);
+}
+.buy__readout-top { display: flex; align-items: center; gap: var(--pactra-space-3); }
+.buy__count { color: var(--pactra-accent); font-family: "JetBrains Mono", var(--pactra-font-mono); font-size: 12px; }
+.buy__verdict {
+  color: var(--pactra-accent);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.buy__verdict[data-tone="refused"] { color: #8c1320; }
+.buy__title {
+  margin: var(--pactra-space-3) 0 0;
+  color: var(--pactra-ink-strong);
+  font-size: clamp(19px, 2vw, 23px);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.buy__body { max-width: 52ch; margin: var(--pactra-space-2) 0 0; color: var(--pactra-copy); font-size: 14.5px; line-height: 1.55; }
+.buy__proof { display: flex; flex-wrap: wrap; gap: var(--pactra-space-3); margin-top: var(--pactra-space-4); }
+.buy__code,
+.buy__tx {
+  padding: 5px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.buy__code { color: var(--pactra-ink); background: rgba(34, 34, 34, 0.05); }
+.buy__tx { color: var(--pactra-accent); background: rgba(173, 49, 77, 0.07); text-decoration: none; }
+.buy__tx:hover { background: rgba(173, 49, 77, 0.13); }
+
+.buy__steps { margin: 0; padding: 0; list-style: none; }
+.buy__step {
+  display: flex;
+  align-items: baseline;
+  gap: var(--pactra-space-4);
+  width: 100%;
+  padding: var(--pactra-space-4) 0;
+  border-top: 1px solid var(--pactra-hairline-soft);
+  color: var(--pactra-copy-dim);
+  font-size: 14.5px;
+  line-height: 1.45;
+  text-align: left;
+  transition: color 0.2s var(--pactra-ease-settle);
+}
+.buy__step:hover { color: var(--pactra-ink); }
+.buy__step[data-state="done"] { color: var(--pactra-copy); }
+.buy__step[data-state="active"] { color: var(--pactra-ink-strong); }
+.buy__step-index {
+  flex: none;
+  color: rgba(34, 34, 34, 0.3);
+  font-family: "JetBrains Mono", var(--pactra-font-mono);
+  font-size: 12px;
+}
+.buy__step[data-state="active"] .buy__step-index,
+.buy__step[data-state="done"] .buy__step-index { color: var(--pactra-accent); }
+.buy__step[data-state="active"][data-tone="refused"] .buy__step-index { color: #8c1320; }
+
+@media (max-width: 900px) {
+  .buy { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 460px) {
+  .buy__panel { padding: var(--pactra-space-5); }
+  .buy__head { flex-wrap: wrap; }
+  .buy__tab { padding: 7px 11px; font-size: 12.5px; }
+  .buy__glyph { width: 40px; height: 40px; }
+  .buy__rail, .buy__span { top: 19px; }
+  .buy__pulse { top: 20px; }
+  .buy__readout { min-height: 208px; }
+}

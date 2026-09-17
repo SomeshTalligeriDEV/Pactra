@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Pactra brand — build the assets.
+
+     node src/build.mjs
+
+   Writes SVG sources and PNG exports into `export/`, then copies the
+   web-facing ones into the apps that serve them. Every asset is generated, so
+   the brand has exactly one definition and the files are a build product
+   rather than something that has to be kept in step by hand.
+   ========================================================================== */
+
+import { mkdirSync, writeFileSync, copyFileSync, rmSync } from "node:fs";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { ACCENT, COPY_DIM, FONT, GLAZE, INK, PAPER, mark, tree, wordmark } from "./parts.mjs";
+
+const require = createRequire(import.meta.url);
+const { Resvg } = require("@resvg/resvg-js");
+const { layoutDots } = require("./dotfont.cjs");
+
+const here = dirname(fileURLToPath(import.meta.url));
+const out = join(here, "..", "export");
+rmSync(out, { recursive: true, force: true });
+mkdirSync(out, { recursive: true });
+
+const svg = (w, h, body, defs = "") =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+  <defs>${GLAZE("glaze")}${defs}</defs>
+${body}
+</svg>
+`;
+
+const written = [];
+
+function write(name, source, pngWidths = []) {
+  writeFileSync(join(out, `${name}.svg`), source);
+  written.push(`${name}.svg`);
+  for (const width of pngWidths) {
+    const png = new Resvg(source, {
+      fitTo: { mode: "width", value: width },
+      font: { loadSystemFonts: true },
+    })
+      .render()
+      .asPng();
+    const file = pngWidths.length === 1 ? `${name}.png` : `${name}-${width}.png`;
+    writeFileSync(join(out, file), png);
+    written.push(file);
+  }
+}
+
+/* ---- the mark, alone ----------------------------------------------------- */
+
+write("mark", svg(24, 24, mark({ size: 24 })), [512, 256, 192, 64, 32, 16]);
+
+/* An opaque ground, because iOS composites the icon onto white and Android
+   masks it to a circle: a transparent mark loses its edge on both. */
+write(
+  "apple-touch-icon",
+  svg(180, 180, `<rect width="180" height="180" rx="40" fill="${PAPER}"/>${mark({ x: 26, y: 26, size: 128 })}`),
+  [180],
+);
+
+/* Maskable: the mark sits inside the inner 80% that Android promises to keep. */
+write(
+  "icon-maskable",
+  svg(512, 512, `<rect width="512" height="512" fill="${PAPER}"/>${mark({ x: 141, y: 141, size: 230 })}`),
+  [512],
+);
+
+/* ---- wordmark and lockups ------------------------------------------------ */
+
+const word = layoutDots("PACTRA");
+const UNIT = 6;
+const wordW = word.width * UNIT;
+const wordH = word.height * UNIT;
+
+write("wordmark-light", svg(wordW, wordH, wordmark(word, { unit: UNIT, fill: ACCENT })), [960, 480]);
+write("wordmark-dark", svg(wordW, wordH, wordmark(word, { unit: UNIT, fill: "#e7c9d2" })), [960, 480]);
+
+function lockup(ground, wordFill, subFill) {
+  /* The tile fills 19 of its 24 units, so matching the word's cap height means
+     sizing the box past it. At 132 the mark read as a small square beside a
+     large word rather than as half of one lockup. */
+  const markSize = Math.round((wordH * 24) / 19);
+  const gap = 44;
+  const w = 120 + markSize + gap + wordW + 120;
+  const h = 400;
+  const top = (h - wordH) / 2;
+  return svg(
+    w,
+    h,
+    `<rect width="${w}" height="${h}" fill="${ground}"/>
+  ${mark({ x: 120, y: (h - markSize) / 2, size: markSize })}
+  ${wordmark(word, { x: 120 + markSize + gap, y: top, unit: UNIT, fill: wordFill })}
+  <text x="${120 + markSize + gap}" y="${top + wordH + 46}" font-family="${FONT}" font-size="26" fill="${subFill}">One budget for a tree of agents</text>`,
+  );
+}
+
+write("logo-light", lockup(PAPER, ACCENT, COPY_DIM), [1200, 600]);
+write("logo-dark", lockup(INK, "#e7c9d2", "rgba(255,255,255,.62)"), [1200, 600]);
+
+/* ---- social ------------------------------------------------------------- */
+
+/**
+ * The picture is the argument: a tree whose root ring is nearly closed and one
+ * leaf already at its bound. A social card that shows only a logo tells a
+ * reader nothing they could not have guessed from the URL.
+ */
+function social(w, h) {
+  const treeW = 520;
+  const treeH = 300;
+  return svg(
+    w,
+    h,
+    `<rect width="${w}" height="${h}" fill="${PAPER}"/>
+  <rect x="0" y="0" width="${w}" height="6" fill="url(#glaze)"/>
+  ${mark({ x: 72, y: 64, size: 56 })}
+  ${wordmark(word, { x: 144, y: 78, unit: 1.85, fill: ACCENT })}
+  <text x="72" y="${h / 2 - 26}" font-family="${FONT}" font-size="60" font-weight="500" fill="${INK}">One budget for a</text>
+  <text x="72" y="${h / 2 + 46}" font-family="${FONT}" font-size="60" font-weight="500" fill="${INK}">tree of agents.</text>
+  <text x="72" y="${h / 2 + 104}" font-family="${FONT}" font-size="23" fill="${COPY_DIM}">Every draw debits every ancestor. The root refuses.</text>
+  <text x="72" y="${h - 56}" font-family="${FONT}" font-size="18" fill="${COPY_DIM}">Enforced on Arc · ERC-8004 conduct record</text>
+  ${tree({ x: w - treeW - 64, y: (h - treeH) / 2 + 10, w: treeW, h: treeH })}`,
+  );
+}
+
+write("og-image", social(1200, 630), [1200]);
+write("banner", social(1280, 640), [1280]);
+
+/* ---- serve them --------------------------------------------------------- */
+
+/* Both surfaces, not just the console. The site is the one that gets shared,
+   so it is the one whose missing og:image is visible to everybody: a link
+   posted anywhere renders as a bare URL without it. It had no `public/` at
+   all until 8 Sep, which is the sort of gap that survives because the surface
+   that does have icons is the one you look at while building. */
+const served = [
+  ["mark.svg", "favicon.svg"],
+  ["mark-32.png", "favicon-32.png"],
+  ["mark-16.png", "favicon-16.png"],
+  ["apple-touch-icon.png", "apple-touch-icon.png"],
+  ["mark-192.png", "icon-192.png"],
+  ["mark-512.png", "icon-512.png"],
+  ["icon-maskable.png", "icon-maskable-512.png"],
+  ["og-image.png", "og-image.png"],
+];
+
+/* The manifest is generated per surface because the icon paths in it are
+   absolute and Vite does not rewrite them: a `.webmanifest` in `public/` is
+   copied byte for byte, so the console's copy asking for `/icon-192.png`
+   404s once the console is served from `/console/`. The base belongs to the
+   deployment, so it is written here beside the icons rather than typed into
+   two files that then disagree. */
+const surfaces = [
+  {
+    pkg: "site",
+    base: "/",
+    name: "Pactra",
+    short: "Pactra",
+    description: "One budget for a tree of agents, enforced on chain.",
+  },
+  {
+    pkg: "console",
+    base: "/console/",
+    name: "Pactra console",
+    short: "Pactra",
+    description: "One budget for a tree of agents, enforced on chain.",
+  },
+];
+
+for (const { pkg, base, name, short, description } of surfaces) {
+  const publicDir = join(here, "..", "..", pkg, "public");
+  mkdirSync(publicDir, { recursive: true });
+  for (const [from, to] of served) copyFileSync(join(out, from), join(publicDir, to));
+
+  const icon = (file, extra) => ({
+    src: `${base}${file}`,
+    sizes: extra.sizes,
+    type: "image/png",
+    ...(extra.purpose ? { purpose: extra.purpose } : {}),
+  });
+
+  writeFileSync(
+    join(publicDir, "manifest.webmanifest"),
+    `${JSON.stringify(
+      {
+        name,
+        short_name: short,
+        description,
+        start_url: base,
+        display: "standalone",
+        background_color: "#ececeb",
+        theme_color: "#ececeb",
+        icons: [
+          icon("icon-192.png", { sizes: "192x192" }),
+          icon("icon-512.png", { sizes: "512x512" }),
+          icon("icon-maskable-512.png", { sizes: "512x512", purpose: "maskable" }),
+        ],
+      },
+      null,
+      2,
+    )}\n`,
+  );
+}
+
+console.log(`${written.length} files in export/`);
+console.log(written.join("\n"));

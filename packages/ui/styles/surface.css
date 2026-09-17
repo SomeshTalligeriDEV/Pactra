@@ -1,0 +1,164 @@
+/* ==========================================================================
+   Surface — the fired tile. Everything else in Pactra is this shape, resized.
+   ========================================================================== */
+
+.pactra-surface {
+  position: relative;
+  isolation: isolate;
+  background-origin: border-box;
+  border: 0 solid transparent;
+  /* The grain is drawn at 116% so its filtered edges fall outside the box.
+     Without a clip here that overscan escapes the surface and widens the page
+     — 8% of every panel, on both sides. `clip` rather than `hidden` so no
+     surface silently becomes a scroll container. */
+  overflow: clip;
+}
+
+/* ---- glazes -------------------------------------------------------------- */
+.pactra-surface--rose {
+  background: var(--pactra-glaze-rose);
+  background-origin: border-box;
+  color: var(--pactra-on-glaze);
+}
+.pactra-surface--violet {
+  background: var(--pactra-glaze-violet);
+  background-origin: border-box;
+  color: var(--pactra-on-glaze);
+}
+.pactra-surface--ember {
+  background: var(--pactra-glaze-ember);
+  background-origin: border-box;
+  color: var(--pactra-on-glaze);
+}
+.pactra-surface--bisque {
+  background: var(--pactra-glaze-bisque);
+  background-origin: border-box;
+  color: var(--pactra-ink);
+}
+.pactra-surface--paper {
+  background: var(--pactra-paper);
+  color: var(--pactra-ink);
+}
+.pactra-surface--none {
+  background: transparent;
+}
+
+/* ---- rim ----------------------------------------------------------------- */
+.pactra-surface--rim {
+  border: 1px solid var(--pactra-glass-line);
+}
+.pactra-surface--bisque.pactra-surface--rim,
+.pactra-surface--paper.pactra-surface--rim {
+  border-color: var(--pactra-hairline);
+}
+
+/* ---- radius -------------------------------------------------------------- */
+.pactra-surface--r1 { border-radius: var(--pactra-radius-1); }
+.pactra-surface--r2 { border-radius: var(--pactra-radius-2); }
+.pactra-surface--r3 { border-radius: var(--pactra-radius-3); }
+.pactra-surface--r4 { border-radius: var(--pactra-radius-4); }
+.pactra-surface--r5 { border-radius: var(--pactra-radius-5); }
+.pactra-surface--r6 { border-radius: var(--pactra-radius-6); }
+.pactra-surface--rpill { border-radius: var(--pactra-radius-pill); }
+
+/* The hero's own rule: radius is a fixed fraction of the tile's width, so a
+   tile keeps its proportions at any scale. Needs a container to measure. */
+.pactra-surface--rtile {
+  container-type: inline-size;
+  border-radius: calc(100cqw * var(--pactra-radius-tile-ratio));
+}
+
+/* ---- elevation ----------------------------------------------------------- */
+.pactra-surface--eflat { box-shadow: none; }
+.pactra-surface--etile { box-shadow: var(--pactra-shadow-tile); }
+.pactra-surface--epanel { box-shadow: var(--pactra-shadow-panel); }
+.pactra-surface--eoverlay { box-shadow: var(--pactra-shadow-overlay); }
+
+/* ---- sheen --------------------------------------------------------------- */
+.pactra-surface--sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--pactra-z-sheen);
+  border-radius: inherit;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  background: var(--pactra-sheen);
+}
+
+/* ---- grain --------------------------------------------------------------- */
+.pactra-grain {
+  position: absolute;
+  inset: -8%;
+  z-index: var(--pactra-z-grain);
+  width: 116%;
+  height: 116%;
+  opacity: var(--pactra-grain-opacity, 0.46);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* ---- interactive --------------------------------------------------------- */
+.pactra-surface--interactive {
+  cursor: pointer;
+  transition: transform var(--pactra-dur-control) var(--pactra-ease-settle),
+    box-shadow var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-surface--interactive:hover {
+  transform: translateY(calc(-1 * var(--pactra-lift)));
+  box-shadow: var(--pactra-shadow-lift);
+}
+.pactra-surface--interactive:focus-visible {
+  outline: var(--pactra-focus-ring) solid var(--pactra-focus-on-paper);
+  outline-offset: var(--pactra-focus-offset);
+}
+.pactra-on-glaze.pactra-surface--interactive:focus-visible {
+  outline-color: var(--pactra-focus-on-glaze);
+}
+
+/* Content must clear the sheen and grain layers. This deliberately does NOT
+   set `position`, because several surfaces (the metric tile above all) place
+   their own children absolutely, and forcing `relative` here would push them
+   out of the tile entirely. Components opt in to stacking themselves. */
+.pactra-surface > *:not(.pactra-grain) {
+  z-index: var(--pactra-z-content);
+}
+
+.pactra-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* ---- pointer glow -------------------------------------------------------- */
+/* The highlight follows the cursor across the glaze. `--pactra-px/py` are
+   written straight to the node by usePointerField, so this costs no renders. */
+.pactra-surface--glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--pactra-z-sheen);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    circle 220px at var(--pactra-px, 50%) var(--pactra-py, 50%),
+    rgba(255, 255, 255, 0.22),
+    transparent 68%
+  );
+  transition: opacity var(--pactra-dur-fast) var(--pactra-ease-settle);
+}
+.pactra-surface--glow:hover::after { opacity: 1; }
+
+/* On paper the same field has to darken, or nothing is visible. */
+.pactra-surface--bisque.pactra-surface--glow::after,
+.pactra-surface--paper.pactra-surface--glow::after {
+  mix-blend-mode: normal;
+  background: radial-gradient(
+    circle 240px at var(--pactra-px, 50%) var(--pactra-py, 50%),
+    rgba(173, 49, 77, 0.09),
+    transparent 66%
+  );
+}

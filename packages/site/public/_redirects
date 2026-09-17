@@ -1,0 +1,17 @@
+# Only the paths the SPA actually owns (App.tsx's <Routes>). Everything else
+# — /, /drill/, /case-studies/, /console/'s own bundle — is a real static
+# file and is left alone: Cloudflare Pages serves those correctly with no
+# rule at all, and a blanket /* rule here previously caught them too,
+# including its own rewrite target, which loops.
+#
+# Target is /app, not /app.html: Pages redirects a rewrite that lands on a
+# literal .html file to its clean URL, and rewriting straight to the clean
+# URL skips that extra hop.
+/docs        /app  200
+/docs/*      /app  200
+/product     /app  200
+/product/*   /app  200
+/agent/*     /app  200
+/attest/*    /app  200
+/refusal/*   /app  200
+/console/*   /console/index.html  200

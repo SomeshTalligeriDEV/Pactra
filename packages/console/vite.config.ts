@@ -1,0 +1,43 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { fileURLToPath } from "node:url";
+
+const local = (path: string) => fileURLToPath(new URL(path, import.meta.url));
+
+/**
+ * Same resolution as `@pactra/site`, and for the same reasons.
+ *
+ * The design system and the fixtures are consumed as source from sibling
+ * packages; a `file:` dependency would not survive a clone, an alias does.
+ * Those siblings sit outside this package, so Node resolution from inside them
+ * never reaches this package's `node_modules` — the three runtime deps are
+ * therefore pointed at this package's copy, at the package DIRECTORY so Vite
+ * still reads each package's own `exports` map. Aliasing a deep file bypasses
+ * that map and yields a build whose animations never start.
+ */
+export default defineConfig({
+  /* The console ships inside the site's origin, at /console/, which is what
+     `lib/links.ts` already assumes and what the routes here are already
+     written as. Without this the build emits /assets/… and collides with the
+     site's own bundle: same names, one directory, whichever deploys last
+     wins and the other surface loads nothing. The trailing slash matters. */
+  base: "/console/",
+  plugins: [react()],
+  resolve: {
+    alias: [
+      { find: /^pactra-ui$/, replacement: local("../ui/index.ts") },
+      { find: /^@pactra\/fixtures$/, replacement: local("../fixtures/src/index.ts") },
+      { find: /^@pactra\/fixtures\/preview$/, replacement: local("../fixtures/src/preview.ts") },
+      { find: /^react$/, replacement: local("./node_modules/react") },
+      { find: /^react-dom$/, replacement: local("./node_modules/react-dom") },
+      { find: /^framer-motion$/, replacement: local("./node_modules/framer-motion") },
+    ],
+    dedupe: ["react", "react-dom", "framer-motion"],
+  },
+  /* `host: true` binds IPv4 as well. Vite's default binds ::1 only, and a
+     browser that resolves localhost to 127.0.0.1 then gets nothing. */
+  /* PORT lets a harness that already owns 5173 hand this server another one.
+     Unset, it keeps the port the other package's links point at. */
+  server: { port: Number(process.env.PORT ?? 5173), host: true },
+  preview: { port: Number(process.env.PORT ?? 5183), host: true },
+});

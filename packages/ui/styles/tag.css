@@ -1,0 +1,92 @@
+.pactra-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--pactra-radius-pill);
+  border: 1px solid transparent;
+  font-size: var(--pactra-size-micro);
+  font-weight: var(--pactra-weight-medium);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  /* A tag sits next to figures more often than next to prose. */
+  font-variant-numeric: tabular-nums;
+}
+.pactra-tag--sm { padding: 4px 10px; }
+.pactra-tag--md { padding: 6px 13px; }
+
+/* The dot carries a halo of its own colour, so a status reads at a glance
+   from across a screen rather than only when the label is legible. */
+.pactra-tag__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--pactra-radius-pill);
+  background: currentColor;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+/* One shape, one recipe: a tinted ground, a hairline of the same hue, and the
+   hue itself for the text. Before this the tags were flat blocks of wash with
+   no edge, which read as highlighter pen rather than as a status. */
+.pactra-tag--neutral,
+.pactra-tag--rose,
+.pactra-tag--violet,
+.pactra-tag--ember,
+.pactra-tag--positive,
+.pactra-tag--caution,
+.pactra-tag--critical,
+.pactra-tag--info {
+  background: color-mix(in srgb, var(--pactra-tag-hue) 9%, var(--pactra-paper));
+  border-color: color-mix(in srgb, var(--pactra-tag-hue) 26%, transparent);
+  color: var(--pactra-tag-hue);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.pactra-tag--neutral { --pactra-tag-hue: var(--pactra-copy); }
+.pactra-tag--rose { --pactra-tag-hue: var(--pactra-accent); }
+.pactra-tag--violet { --pactra-tag-hue: var(--pactra-info); }
+.pactra-tag--ember { --pactra-tag-hue: #b13a2c; }
+.pactra-tag--positive { --pactra-tag-hue: var(--pactra-positive); }
+.pactra-tag--caution { --pactra-tag-hue: var(--pactra-caution); }
+.pactra-tag--critical { --pactra-tag-hue: var(--pactra-critical); }
+.pactra-tag--info { --pactra-tag-hue: var(--pactra-info); }
+
+/* On a glaze the paper mix would be invisible, so the tinted ground gives way
+   to a translucent white one. */
+.pactra-surface--rose .pactra-tag:not(.pactra-tag--solid),
+.pactra-surface--violet .pactra-tag:not(.pactra-tag--solid),
+.pactra-surface--ember .pactra-tag:not(.pactra-tag--solid) {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: var(--pactra-on-glaze);
+  box-shadow: none;
+}
+
+.pactra-tag--solid { color: var(--pactra-on-glaze); border-color: var(--pactra-glass-line); box-shadow: var(--pactra-shadow-control); }
+.pactra-tag--solid.pactra-tag--rose { background: var(--pactra-glaze-rose); }
+.pactra-tag--solid.pactra-tag--violet { background: var(--pactra-glaze-violet); }
+.pactra-tag--solid.pactra-tag--ember { background: var(--pactra-glaze-ember); }
+.pactra-tag--solid.pactra-tag--neutral { background: var(--pactra-ink); }
+.pactra-tag--solid.pactra-tag--positive { background: var(--pactra-positive-glaze); }
+.pactra-tag--solid.pactra-tag--caution { background: var(--pactra-caution-glaze); }
+.pactra-tag--solid.pactra-tag--critical { background: var(--pactra-critical-glaze); }
+.pactra-tag--solid.pactra-tag--info { background: var(--pactra-info-glaze); }
+
+.pactra-tag__remove {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  margin-right: -3px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pactra-radius-pill);
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-tag__remove:hover { opacity: 1; }
+.pactra-tag__remove:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; opacity: 1; }

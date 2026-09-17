@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Gauge — the hero's tick ring, carrying a value.
+   ========================================================================== */
+
+/* The ring only ever occupies the top of its circle, so the box is cropped to
+   it — otherwise every gauge carries half a square of dead space. */
+.pactra-gauge { position: relative; aspect-ratio: 326 / 186; }
+.pactra-gauge__svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+/* Paper is the default ground, so the ring darkens by default and lightens
+   only where it actually sits on a glaze. Keying this off the container —
+   `.docs__demo` and friends — is what washed the ring out on glazed tiles. */
+.pactra-gauge__tick {
+  stroke: rgba(140, 19, 32, 0.15);
+  transition: stroke var(--pactra-dur-fast) var(--pactra-ease-settle);
+}
+.pactra-gauge__tick--lit { stroke: rgba(173, 49, 77, 0.66); }
+
+/* On a glazed panel the unlit ticks sat at 0.22 and the dial read as a smudge
+   rather than as a dial, which made the lit arc look like it had been cut off
+   at the panel's edge. The lit ticks are unchanged: the contrast between the
+   two is the measurement. */
+.pactra-on-glaze .pactra-gauge__tick { stroke: rgba(255, 214, 228, 0.34); }
+.pactra-on-glaze .pactra-gauge__tick--lit { stroke: rgba(255, 226, 236, 0.82); }
+
+.pactra-gauge__pointer { stroke: rgba(173, 49, 77, 0.55); }
+.pactra-on-glaze .pactra-gauge__pointer { stroke: rgba(255, 231, 239, 0.72); }
+
+.pactra-gauge__ring { stroke: rgba(140, 19, 32, 0.12); }
+.pactra-gauge__hairline { stroke: rgba(140, 19, 32, 0.1); }
+.pactra-on-glaze .pactra-gauge__ring { stroke: rgba(255, 166, 194, 0.24); }
+.pactra-on-glaze .pactra-gauge__hairline { stroke: rgba(255, 166, 194, 0.31); }
+
+.pactra-gauge__readout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5%;
+  padding-bottom: 6%;
+  pointer-events: none;
+}
+
+.pactra-gauge__footnote {
+  color: var(--pactra-copy-dim);
+  font-size: 0.62em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pactra-on-glaze .pactra-gauge__footnote { color: var(--pactra-on-glaze-dim); }
+
+/* The radar sweep is CSS, so it cannot fight framer for the same transform. */
+.pactra-gauge__sweeping {
+  animation: pactra-gauge-sweep 3.4s linear infinite;
+  transform-box: view-box;
+  transform-origin: 163px 163px;
+}
+@keyframes pactra-gauge-sweep { to { transform: rotate(360deg); } }

@@ -1,0 +1,363 @@
+/* ==========================================================================
+   PACTRA — token layer
+   Every value below is lifted from the "Built for Intelligent Performance"
+   stage. Nothing here is invented; it is that hero, normalised into a scale.
+   ========================================================================== */
+
+:root {
+  /* ---- ground -------------------------------------------------------- */
+  --pactra-paper: #ececeb;
+  --pactra-paper-dim: #e8e8e8;
+  --pactra-paper-raised: #f4f4f2;
+  --pactra-ink: #222222;
+  --pactra-ink-strong: #202020;
+  --pactra-copy: #4a4a4a;
+  /* Measured, not chosen: #6f6f6f against the page's #ececeb is 4.25:1, and
+     the smallest type on the site wears this — the console wordmark's
+     `console`, footnotes, the dim half of a caption. #696969 is 4.64:1, which
+     clears AA with a little room, and six points of grey is not a visible
+     change to anything except a contrast checker. */
+  --pactra-copy-dim: #696969;
+  --pactra-hairline: rgba(34, 34, 34, 0.12);
+  --pactra-hairline-soft: rgba(34, 34, 34, 0.07);
+
+  /* ---- accent (the LED word) ----------------------------------------- */
+  --pactra-accent: #ad314d;
+  --pactra-accent-quiet: rgba(173, 49, 77, 0.12);
+  --pactra-accent-line: rgba(173, 49, 77, 0.34);
+
+  /* ---- glaze: rose (card 1 — speed) ---------------------------------- */
+  --pactra-rose-1: #bd4468;
+  --pactra-rose-2: #ad355b;
+  --pactra-rose-3: #a63b50;
+  --pactra-rose-4: #8c1320;
+
+  /* ---- glaze: violet (card 2 — context) ------------------------------ */
+  --pactra-violet-1: #c9b5e1;
+  --pactra-violet-2: #ad80ca;
+  --pactra-violet-3: #9d4f72;
+  --pactra-violet-4: #793246;
+
+  /* ---- glaze: ember (card 3 — connections) --------------------------- */
+  --pactra-ember-1: #d84736;
+  --pactra-ember-2: #dd523c;
+  --pactra-ember-3: #e8703d;
+  --pactra-ember-4: #de5641;
+  --pactra-ember-5: #d34239;
+
+  /* ---- signal (highlights that ride on top of glaze) ----------------- */
+  --pactra-hot: #ff6796;
+  --pactra-hot-soft: #ff9ab7;
+  --pactra-cream: #fff8dd;
+  --pactra-filament: #fff4a7;
+  --pactra-magenta: #ee78d6;
+  --pactra-magenta-deep: #de56b1;
+
+  /* ---- status (borrowed from the same families, never new hues) ------ */
+  --pactra-positive: #4d7c4f;
+  --pactra-positive-glaze: linear-gradient(164deg, #6f9e6a 0%, #3f6b47 100%);
+  --pactra-caution: #b06a1f;
+  --pactra-caution-glaze: linear-gradient(177deg, #e8a03d 0%, #c06a22 100%);
+  --pactra-critical: #a63b50;
+  --pactra-critical-glaze: linear-gradient(180deg, #bd4468 0%, #8c1320 100%);
+  --pactra-info: #6f4f9d;
+  --pactra-info-glaze: linear-gradient(164deg, #ad80ca 0%, #6a3f8c 100%);
+
+  /* ---- glass ---------------------------------------------------------- */
+  --pactra-glass-line: rgba(255, 255, 255, 0.36);
+  --pactra-glass-line-soft: rgba(255, 255, 255, 0.24);
+  --pactra-glass-fill: rgba(255, 255, 255, 0.14);
+  --pactra-glass-fill-strong: rgba(255, 255, 255, 0.28);
+  --pactra-glass-blur: 9px;
+  --pactra-glass-saturate: 1.08;
+
+  /* ---- ink that sits ON a glaze -------------------------------------- */
+  --pactra-on-glaze: rgba(255, 255, 255, 0.96);
+  --pactra-on-glaze-soft: rgba(255, 255, 255, 0.87);
+  --pactra-on-glaze-dim: rgba(255, 255, 255, 0.62);
+  --pactra-on-glaze-line: rgba(255, 255, 255, 0.28);
+
+  /* ---- radius: hero card is 17 / 429 = 3.96% of its own width --------- */
+  --pactra-radius-1: 4px;
+  --pactra-radius-2: 7px;
+  --pactra-radius-3: 10px;
+  --pactra-radius-4: 13px;
+  --pactra-radius-5: 17px;
+  --pactra-radius-6: 24px;
+  --pactra-radius-pill: 999px;
+  --pactra-radius-tile-ratio: 0.0396;
+
+  /* ---- space: the hero's own rhythm (3 / 6 / 8 / 12 / 17 / 23 / 44) --- */
+  --pactra-space-0: 0px;
+  --pactra-space-1: 3px;
+  --pactra-space-2: 6px;
+  --pactra-space-3: 8px;
+  --pactra-space-4: 12px;
+  --pactra-space-5: 17px;
+  --pactra-space-6: 23px;
+  --pactra-space-7: 32px;
+  --pactra-space-8: 44px;
+  --pactra-space-9: 54px;
+  --pactra-space-10: 72px;
+  --pactra-space-11: 94px;
+
+  /* ---- fluid rhythm, exactly as the stage declares it ----------------- */
+  --pactra-gap: clamp(8px, 1.5vw, 23px);
+  --pactra-gutter: clamp(14px, 3.6vw, 54px);
+  --pactra-pad-top: clamp(20px, 9.6vh, 94px);
+  --pactra-pad-bottom: clamp(16px, 3vh, 52px);
+
+  /* ---- type ----------------------------------------------------------- */
+  --pactra-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --pactra-font-mono: "SFMono-Regular", "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --pactra-size-display: clamp(24px, min(3.1vw, 5.9vh), 47px);
+  --pactra-size-title: 22.95px;
+  --pactra-size-lead: clamp(13px, min(1.36vw, 2.6vh), 20.6px);
+  --pactra-size-metric: 30.6px;
+  --pactra-size-body: 15px;
+  --pactra-size-caption: 13.2px;
+  --pactra-size-micro: 11.5px;
+  --pactra-size-control: 14px;
+
+  --pactra-weight-regular: 400;
+  --pactra-weight-medium: 500;
+  --pactra-weight-semibold: 600;
+  --pactra-weight-bold: 700;
+
+  --pactra-track-display: 0.015em;   /* headline  */
+  --pactra-track-lead: -0.017em;     /* intro     */
+  --pactra-track-caption: -0.018em;  /* -0.36 / 19.95 */
+  --pactra-track-control: -0.018em;  /* -0.25 / 14    */
+  --pactra-track-none: 0;
+
+  --pactra-leading-display: 1.223;
+  --pactra-leading-title: 1.48;
+  --pactra-leading-lead: 1.62;
+  --pactra-leading-body: 1.55;
+  --pactra-leading-caption: 1.45;
+  --pactra-leading-tight: 1;
+
+  /* ---- elevation ------------------------------------------------------ */
+  --pactra-shadow-tile: 0 2px 4px rgba(50, 28, 39, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  --pactra-shadow-control: 0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 1px 3px rgba(58, 25, 39, 0.08);
+  --pactra-shadow-lift: 0 8px 20px rgba(58, 25, 39, 0.16);
+  --pactra-shadow-panel: 0 13px 25px rgba(70, 17, 69, 0.31),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --pactra-shadow-overlay: 0 24px 64px rgba(50, 28, 39, 0.28),
+    0 2px 8px rgba(50, 28, 39, 0.16);
+  --pactra-shadow-inset-well: inset 0 1px 2px rgba(58, 25, 39, 0.1);
+
+  /* ---- motion: the stage only ever uses two curves -------------------- */
+  --pactra-ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --pactra-ease-support: cubic-bezier(0.22, 1, 0.36, 1);
+  --pactra-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  --pactra-dur-control: 0.18s;
+  --pactra-dur-fast: 0.32s;
+  --pactra-dur-settle: 0.52s;
+  --pactra-dur-support: 0.54s;
+  --pactra-dur-reveal: 0.62s;
+  --pactra-dur-metric: 0.66s;
+  --pactra-dur-establish: 0.76s;
+  --pactra-dur-resolve: 0.82s;
+  --pactra-dur-headline: 0.84s;
+
+  --pactra-stagger: 0.12s;      /* card 1 .46 -> card 2 .58 -> card 3 .70 */
+  --pactra-lift: 2px;           /* learn-more hover translateY */
+
+  /* ---- density --------------------------------------------------------
+     One knob. Control height, field padding and stack rhythm move together,
+     because changing only one of them is what makes a "compact" mode look
+     squashed instead of dense. */
+  --pactra-control-h: 38px;
+  --pactra-control-h-sm: 30px;
+  --pactra-control-h-lg: 45px;
+  --pactra-control-px: var(--pactra-space-5);
+  --pactra-row-h: 36px;
+  --pactra-stack: var(--pactra-space-5);
+
+  /* ---- focus ---------------------------------------------------------- */
+  --pactra-focus-ring: 3px;
+  --pactra-focus-offset: 3px;
+  --pactra-focus-on-paper: rgba(173, 49, 77, 0.55);
+  --pactra-focus-on-glaze: rgba(255, 255, 255, 0.78);
+
+  /* ---- z ------------------------------------------------------------- */
+  --pactra-z-base: 0;
+  --pactra-z-sheen: 1;
+  --pactra-z-grain: 2;
+  --pactra-z-content: 4;
+  --pactra-z-raised: 6;
+  --pactra-z-sticky: 20;
+  --pactra-z-overlay: 60;
+  --pactra-z-toast: 80;
+
+  /* ---- breakpoints (documented; media queries can't read a var) ------- */
+  --pactra-bp-narrow: 767px;
+  --pactra-bp-wide: 768px;
+  --pactra-bp-tablet-max: 1180px;
+  --pactra-bp-content: 1333px; /* 3 * 429 + 2 * 23 */
+}
+
+/* --------------------------------------------------------------------------
+   Glaze recipes. A glaze is a full multi-stop background, not one colour —
+   that is what makes a Pactra surface read as fired ceramic instead of a fill.
+   -------------------------------------------------------------------------- */
+:root {
+  --pactra-glaze-rose:
+    radial-gradient(ellipse 68% 45% at -4% -3%, rgba(255, 235, 232, 0.73) 0%, rgba(255, 226, 226, 0.41) 46%, transparent 77%),
+    radial-gradient(ellipse 70% 45% at 104% -4%, rgba(255, 238, 233, 0.78) 0%, rgba(255, 226, 226, 0.42) 48%, transparent 78%),
+    radial-gradient(ellipse 93% 47% at 106% 58%, rgba(245, 247, 241, 0.73) 0%, rgba(246, 231, 229, 0.42) 48%, transparent 76%),
+    radial-gradient(ellipse 74% 40% at -8% 73%, rgba(255, 210, 190, 0.48) 0%, rgba(255, 194, 181, 0.25) 48%, transparent 77%),
+    radial-gradient(ellipse 54% 30% at 50% 17%, rgba(106, 8, 51, 0.22) 0%, transparent 78%),
+    linear-gradient(180deg, var(--pactra-rose-1) 0%, var(--pactra-rose-2) 38%, var(--pactra-rose-3) 72%, var(--pactra-rose-4) 100%);
+
+  --pactra-glaze-violet:
+    radial-gradient(ellipse 43% 42% at -5% 30%, rgba(228, 220, 255, 0.53), transparent 78%),
+    radial-gradient(ellipse 43% 42% at 105% 30%, rgba(245, 200, 210, 0.54), transparent 78%),
+    radial-gradient(ellipse 70% 48% at 70% 110%, rgba(238, 204, 201, 0.62), transparent 77%),
+    radial-gradient(ellipse 78% 25% at 15% 8%, rgba(218, 211, 255, 0.54), transparent 79%),
+    radial-gradient(ellipse 45% 26% at 47% 78%, rgba(236, 184, 183, 0.45), transparent 73%),
+    linear-gradient(164deg, var(--pactra-violet-1) 0%, var(--pactra-violet-2) 29%, var(--pactra-violet-3) 64%, var(--pactra-violet-4) 100%);
+
+  --pactra-glaze-ember:
+    radial-gradient(ellipse 38% 24% at 102% 8%, rgba(255, 190, 164, 0.24), transparent 75%),
+    radial-gradient(ellipse 28% 24% at -5% 66%, rgba(255, 192, 174, 0.3), transparent 74%),
+    radial-gradient(ellipse 46% 30% at 104% 32%, rgba(255, 146, 52, 0.42), transparent 74%),
+    radial-gradient(ellipse 80% 36% at 62% 57%, rgba(255, 141, 36, 0.62), transparent 72%),
+    radial-gradient(ellipse 58% 30% at 6% 103%, rgba(199, 49, 45, 0.38), transparent 76%),
+    linear-gradient(177deg, var(--pactra-ember-1) 0%, var(--pactra-ember-2) 24%, var(--pactra-ember-3) 52%, var(--pactra-ember-4) 78%, var(--pactra-ember-5) 100%);
+
+  /* the unfired surface: paper with a whisper of glaze */
+  --pactra-glaze-bisque:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.34) 100%),
+    var(--pactra-paper-raised);
+
+  /* The context-window recipe from the stage, translated to paper. Same four
+     layers in the same order — a white lift from the bottom, a coloured bloom
+     on the trailing edge, a radial at the top, a base — so a dropdown reads as
+     the same object as the hero's glass panel rather than a white rectangle. */
+  --pactra-panel:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.66) 45%, rgba(255, 255, 255, 0.34) 80%),
+    linear-gradient(270deg, rgba(213, 62, 152, 0.16) 0px, rgba(213, 62, 152, 0) 5px),
+    radial-gradient(ellipse 118% 70% at 60% 8%, rgba(255, 203, 252, 0.16), transparent 74%),
+    linear-gradient(105deg, rgba(252, 250, 252, 0.96) 0%, rgba(250, 241, 249, 0.96) 51%, rgba(248, 236, 246, 0.96) 100%);
+
+  --pactra-panel-glazed:
+    linear-gradient(0deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.15) 45%, rgba(255, 255, 255, 0) 80%),
+    linear-gradient(270deg, rgba(213, 62, 152, 0.62) 0px, rgba(213, 62, 152, 0) 5px),
+    radial-gradient(ellipse 118% 70% at 60% 8%, rgba(255, 203, 252, 0.34), transparent 74%),
+    linear-gradient(105deg, rgba(250, 232, 250, 0.72) 0%, rgba(238, 120, 214, 0.68) 51%, rgba(222, 86, 177, 0.82) 100%);
+
+  /* sheen that sits over any glaze, mix-blend-mode: screen */
+  --pactra-sheen:
+    linear-gradient(102deg, rgba(255, 255, 255, 0.1), transparent 28%, rgba(255, 255, 255, 0.08) 62%, transparent 88%),
+    radial-gradient(ellipse 85% 34% at 54% 7%, rgba(255, 255, 255, 0.24), transparent 72%);
+}
+
+/* --------------------------------------------------------------------------
+   Reset — scoped, so Pactra can drop into an existing page without a fight.
+   -------------------------------------------------------------------------- */
+/* The layers below are portals: React mounts them at the end of `body`, not
+   inside `.pactra-root`, so a reset scoped to the root reached none of them.
+   Every input in every modal was therefore `width: 100%` of its slot **plus**
+   34px of padding and 2px of border — a form in a dialog overflowed its own
+   body and grew a horizontal scrollbar, which is what this was found as.
+   A portal is still Pactra's own markup and the reset has to follow it. */
+.pactra-root,
+.pactra-root *,
+.pactra-root *::before,
+.pactra-root *::after,
+.pactra-modal-layer,
+.pactra-modal-layer *,
+.pactra-modal-layer *::before,
+.pactra-modal-layer *::after,
+.pactra-sheet-layer,
+.pactra-sheet-layer *,
+.pactra-sheet-layer *::before,
+.pactra-sheet-layer *::after,
+.pactra-command-layer,
+.pactra-command-layer *,
+.pactra-command-layer *::before,
+.pactra-command-layer *::after,
+.pactra-drawer-layer,
+.pactra-drawer-layer *,
+.pactra-drawer-layer *::before,
+.pactra-drawer-layer *::after,
+.pactra-toasts,
+.pactra-toasts *,
+.pactra-toasts *::before,
+.pactra-toasts *::after {
+  box-sizing: border-box;
+}
+
+.pactra-root {
+  color: var(--pactra-ink);
+  background: var(--pactra-paper);
+  font-family: var(--pactra-font);
+  font-size: var(--pactra-size-body);
+  line-height: var(--pactra-leading-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* `:where()` keeps this at element-level specificity. Without it the reset
+   would outrank every component's own colour rule — a secondary button on a
+   glazed tile would inherit white ink and vanish. */
+:where(.pactra-root) button,
+:where(.pactra-root) input,
+:where(.pactra-root) select,
+:where(.pactra-root) textarea,
+:where(.pactra-root) a {
+  font: inherit;
+  color: inherit;
+}
+
+.pactra-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pactra-root *,
+  .pactra-root *::before,
+  .pactra-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Density is set on any subtree, not globally, so a dense table can sit
+   inside a comfortable page without either one fighting the other. */
+[data-pactra-density="compact"] {
+  --pactra-control-h: 32px;
+  --pactra-control-h-sm: 26px;
+  --pactra-control-h-lg: 38px;
+  --pactra-control-px: var(--pactra-space-4);
+  --pactra-row-h: 30px;
+  --pactra-stack: var(--pactra-space-3);
+}
+
+[data-pactra-density="comfortable"] {
+  --pactra-control-h: 44px;
+  --pactra-control-h-sm: 34px;
+  --pactra-control-h-lg: 52px;
+  --pactra-control-px: var(--pactra-space-6);
+  --pactra-row-h: 44px;
+  --pactra-stack: var(--pactra-space-7);
+}

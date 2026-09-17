@@ -1,0 +1,125 @@
+/* ==========================================================================
+   Modal, Message box, scrim.
+   ========================================================================== */
+
+.pactra-modal-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--pactra-z-overlay);
+  display: grid;
+  place-items: center;
+  padding: var(--pactra-gutter);
+  font-family: var(--pactra-font);
+}
+
+.pactra-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(46, 26, 36, 0.42);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.pactra-modal {
+  position: relative;
+  width: 100%;
+  max-height: calc(100svh - var(--pactra-gutter) * 2);
+  outline: none;
+}
+.pactra-modal--sm { max-width: 400px; }
+.pactra-modal--md { max-width: 560px; }
+.pactra-modal--lg { max-width: 760px; }
+/* A surface to work in rather than one to read. A dialog that holds a drawing
+   somebody is going to explore wants the window, not a column of it. */
+.pactra-modal--full { max-width: min(1280px, calc(100vw - var(--pactra-gutter) * 2)); }
+.pactra-modal--full .pactra-modal__surface { height: calc(100svh - var(--pactra-gutter) * 2); }
+.pactra-modal--full .pactra-modal__body { display: flex; min-height: 0; }
+
+.pactra-modal__surface {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  overflow: hidden;
+  color: var(--pactra-ink);
+}
+
+.pactra-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--pactra-space-4);
+  padding: var(--pactra-space-6) var(--pactra-space-6) var(--pactra-space-4);
+}
+
+.pactra-modal__heading { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+.pactra-modal__title {
+  margin: 0;
+  color: var(--pactra-ink-strong);
+  font-size: 19px;
+  font-weight: var(--pactra-weight-semibold);
+  letter-spacing: var(--pactra-track-caption);
+  line-height: 1.3;
+}
+
+.pactra-modal__description {
+  margin: 0;
+  color: var(--pactra-copy);
+  font-size: var(--pactra-size-caption);
+  line-height: var(--pactra-leading-caption);
+}
+
+.pactra-modal__close {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pactra-radius-pill);
+  background: rgba(34, 34, 34, 0.05);
+  color: var(--pactra-copy);
+  cursor: pointer;
+  transition: background var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-modal__close:hover { background: rgba(34, 34, 34, 0.11); color: var(--pactra-ink); }
+.pactra-modal__close:focus-visible {
+  outline: var(--pactra-focus-ring) solid var(--pactra-focus-on-paper);
+  outline-offset: 2px;
+}
+
+.pactra-modal__body {
+  overflow-y: auto;
+  padding: 0 var(--pactra-space-6) var(--pactra-space-6);
+  color: var(--pactra-copy);
+  font-size: var(--pactra-size-body);
+  line-height: var(--pactra-leading-body);
+}
+
+.pactra-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--pactra-space-3);
+  padding: var(--pactra-space-4) var(--pactra-space-6);
+  border-top: 1px solid var(--pactra-hairline-soft);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* ---- message box --------------------------------------------------------- */
+.pactra-messagebox__body { display: flex; align-items: flex-start; gap: var(--pactra-space-4); }
+
+.pactra-messagebox__icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--pactra-radius-pill);
+  font-size: 18px;
+}
+.pactra-messagebox--info .pactra-messagebox__icon { background: rgba(111, 79, 157, 0.12); color: var(--pactra-info); }
+.pactra-messagebox--caution .pactra-messagebox__icon { background: rgba(176, 106, 31, 0.14); color: var(--pactra-caution); }
+.pactra-messagebox--critical .pactra-messagebox__icon { background: rgba(166, 59, 80, 0.14); color: var(--pactra-critical); }
+.pactra-messagebox--positive .pactra-messagebox__icon { background: rgba(77, 124, 79, 0.14); color: var(--pactra-positive); }

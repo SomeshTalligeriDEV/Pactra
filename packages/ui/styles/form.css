@@ -1,0 +1,162 @@
+/* ==========================================================================
+   Form, Calendar, Typography, Logo.
+   ========================================================================== */
+
+.pactra-form { display: grid; gap: var(--pactra-space-6); min-width: 0; }
+.pactra-form--cols-1 { grid-template-columns: minmax(0, 1fr); }
+.pactra-form--cols-2 { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 720px) {
+  .pactra-form--cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.pactra-form__section { display: flex; flex-direction: column; gap: var(--pactra-space-4); min-width: 0; margin: 0; padding: 0; border: 0; }
+.pactra-form__section--full { grid-column: 1 / -1; }
+.pactra-form__legend {
+  padding: 0;
+  color: var(--pactra-ink-strong);
+  font-size: var(--pactra-size-body);
+  font-weight: var(--pactra-weight-semibold);
+  letter-spacing: var(--pactra-track-caption);
+}
+.pactra-form__description { margin: -6px 0 0; color: var(--pactra-copy-dim); font-size: var(--pactra-size-micro); line-height: 1.5; }
+.pactra-form__fields { display: flex; flex-direction: column; gap: var(--pactra-space-5); }
+
+.pactra-form__actions { display: flex; gap: var(--pactra-space-3); grid-column: 1 / -1; padding-top: var(--pactra-space-2); }
+.pactra-form__actions--start { justify-content: flex-start; }
+.pactra-form__actions--end { justify-content: flex-end; }
+.pactra-form__actions--between { justify-content: space-between; }
+
+/* ---- calendar ------------------------------------------------------------ */
+.pactra-datepicker { position: relative; display: flex; flex-direction: column; gap: var(--pactra-space-2); }
+.pactra-datepicker__trigger { cursor: pointer; text-align: left; }
+.pactra-datepicker__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: var(--pactra-z-overlay);
+  padding: var(--pactra-space-4);
+  border: 1px solid var(--pactra-glass-line);
+  border-radius: var(--pactra-radius-4);
+  background: var(--pactra-panel);
+  background-origin: border-box;
+  box-shadow: var(--pactra-shadow-panel), var(--pactra-shadow-overlay);
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
+  backdrop-filter: blur(12px) saturate(1.08);
+}
+
+.pactra-calendar { width: 252px; }
+.pactra-calendar__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--pactra-space-3); }
+.pactra-calendar__heading { color: var(--pactra-ink); font-size: var(--pactra-size-caption); font-weight: var(--pactra-weight-medium); }
+.pactra-calendar__nav {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pactra-radius-2);
+  background: transparent;
+  color: var(--pactra-copy);
+  cursor: pointer;
+}
+.pactra-calendar__nav:hover { background: rgba(34, 34, 34, 0.07); }
+.pactra-calendar__nav:focus-visible { outline: 2px solid var(--pactra-focus-on-paper); outline-offset: 1px; }
+
+.pactra-calendar__weekdays,
+.pactra-calendar__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.pactra-calendar__weekdays {
+  margin-bottom: 4px;
+  color: var(--pactra-copy-dim);
+  font-size: 10.5px;
+  text-align: center;
+}
+
+.pactra-calendar__day {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pactra-radius-2);
+  background: transparent;
+  color: var(--pactra-ink);
+  font-size: var(--pactra-size-micro);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background var(--pactra-dur-control) var(--pactra-ease-settle);
+}
+.pactra-calendar__day:hover:not(:disabled) { background: rgba(34, 34, 34, 0.07); }
+.pactra-calendar__day:disabled { opacity: 0.3; cursor: not-allowed; }
+.pactra-calendar__day:focus-visible { outline: 2px solid var(--pactra-focus-on-paper); outline-offset: -1px; }
+.pactra-calendar__day--today { box-shadow: inset 0 0 0 1px var(--pactra-accent-line); }
+.pactra-calendar__day--selected {
+  background: var(--pactra-glaze-rose);
+  background-origin: border-box;
+  color: var(--pactra-on-glaze);
+  font-weight: var(--pactra-weight-medium);
+}
+
+.pactra-datepicker__time {
+  display: flex;
+  align-items: center;
+  gap: var(--pactra-space-3);
+  margin-top: var(--pactra-space-3);
+  padding-top: var(--pactra-space-3);
+  border-top: 1px solid var(--pactra-hairline-soft);
+  color: var(--pactra-copy-dim);
+}
+.pactra-datepicker__time-input {
+  flex: 1 1 auto;
+  padding: 5px 8px;
+  border: 1px solid var(--pactra-hairline);
+  border-radius: var(--pactra-radius-2);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--pactra-ink);
+  font: inherit;
+  font-size: var(--pactra-size-micro);
+}
+.pactra-datepicker__done {
+  padding: 5px 12px;
+  border: 0;
+  border-radius: var(--pactra-radius-pill);
+  background: var(--pactra-glaze-rose);
+  color: #fff;
+  font-size: var(--pactra-size-micro);
+  cursor: pointer;
+}
+
+/* ---- typography ---------------------------------------------------------- */
+.pactra-headline {
+  margin: 0;
+  color: var(--pactra-ink-strong);
+  font-size: var(--pactra-size-display);
+  font-weight: var(--pactra-weight-regular);
+  letter-spacing: var(--pactra-track-display);
+  line-height: var(--pactra-leading-display);
+}
+.pactra-headline__line { display: flex; flex-wrap: nowrap; align-items: center; white-space: nowrap; }
+.pactra-headline__dotword {
+  flex: 0 0 auto;
+  width: 4.851em;
+  height: 0.766em;
+  margin-inline: 0.319em;
+  color: var(--pactra-accent);
+  transform: translateY(0.085em);
+}
+
+.pactra-text { margin: 0; }
+.pactra-text--lead { font-size: var(--pactra-size-lead); letter-spacing: var(--pactra-track-lead); line-height: var(--pactra-leading-lead); }
+.pactra-text--body { font-size: var(--pactra-size-body); line-height: var(--pactra-leading-body); }
+.pactra-text--caption { font-size: var(--pactra-size-caption); letter-spacing: var(--pactra-track-caption); line-height: var(--pactra-leading-caption); }
+.pactra-text--micro { font-size: var(--pactra-size-micro); letter-spacing: var(--pactra-track-caption); line-height: 1.45; }
+.pactra-text--ink { color: var(--pactra-ink); }
+.pactra-text--copy { color: var(--pactra-copy); }
+.pactra-text--dim { color: var(--pactra-copy-dim); }
+.pactra-text--accent { color: var(--pactra-accent); }
+.pactra-text--on-glaze { color: var(--pactra-on-glaze-soft); }
+
+/* ---- logo ---------------------------------------------------------------- */
+.pactra-logo { display: inline-flex; align-items: center; gap: 0.42em; line-height: 1; }
+.pactra-logo__mark { display: block; width: 1.18em; height: 1.18em; }
+.pactra-logo__mark svg { width: 100%; height: 100%; }
+.pactra-logo__word { width: 3.1em; color: var(--pactra-ink-strong); }
