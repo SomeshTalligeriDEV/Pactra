@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Secrets — operator keys, seller keys, wallet app config. Never committed;
+# ops/README.md and each package's own docs say where to create these by hand.
+.env
+.env.*
+!.env.example
+*.env
+!*.env.example
+
+# Foundry
+packages/contracts/cache/
+packages/contracts/foundry-pp/
+packages/contracts/out/
+
+# Foundry broadcast logs are kept — they're public transaction records, the
+# same transparency argument the project makes about the chain itself. Only
+# the *sensitive* ones need excluding, and there are none: no private key is
+# ever written there.
+
+# Meter's rebuildable ledger snapshot — regenerated from chain on start.
+packages/*/ledger.*.json
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Logs
+npm-debug.log*
+*.log
