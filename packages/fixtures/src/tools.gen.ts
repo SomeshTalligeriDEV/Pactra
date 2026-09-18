@@ -32,7 +32,7 @@ export const ABSENT_TOOLS = [
 
 /** The block to paste into an MCP client. Its environment is the one the
  *  daemon actually reads — see ENV in packages/daemon/src/config.ts. */
-export const MCP_CONFIG = "{\n  \"mcpServers\": {\n    \"pactra\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"pactra-mcp\"\n      ],\n      \"env\": {\n        \"PACTRA_ENV_FILE\": \"/Users/<you>/.pactra/pactra.env\",\n        \"PACTRA_MCP_NODE\": \"0x… — the node this server speaks for\"\n      }\n    }\n  }\n}";
+export const MCP_CONFIG = "{\n  \"mcpServers\": {\n    \"pactra\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"pactra-mcp\"\n      ],\n      \"env\": {\n        \"PACTRA_ENV_FILE\": \"pactra.env\",\n        \"PACTRA_MCP_NODE\": \"0x… — the node this server speaks for\"\n      }\n    }\n  }\n}";
 
 export const MCP_ENV = {
   "required": {

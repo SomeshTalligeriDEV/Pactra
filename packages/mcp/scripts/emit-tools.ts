@@ -117,7 +117,7 @@ function configBlock(): string {
           command: "npx",
           args: ["-y", "pactra-mcp"],
           env: {
-            PACTRA_ENV_FILE: "/Users/<you>/.pactra/pactra.env",
+            PACTRA_ENV_FILE: "pactra.env",
             PACTRA_MCP_NODE: "0x… — the node this server speaks for",
           },
         },

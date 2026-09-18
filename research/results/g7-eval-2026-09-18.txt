@@ -1,0 +1,20 @@
+
+> @pactra/eval@0.1.0 start
+> node src/main.ts
+
+(node:69845) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+3 runs each, 4 paid sources
+the task costs $1.56 against a $20.00 window
+
+the-work — scripted, 100% of the window each
+  pactra      · 3/3 complete · 0 refused · spent $4.68 · runaway $0.00 · exposed at start $0.00 · 2 writes per purchase
+  shared-cap  · 3/3 complete · 0 refused · spent $4.68 · runaway $0.00 · exposed at start $20.00 · 1 writes per purchase
+  independent-wallets · 3/3 complete · 0 refused · spent $4.68 · runaway $0.00 · exposed at start $40.00 · 1 writes per purchase
+
+a-worker-in-a-loop — scripted, one worker in a loop, 50% of the window each
+  pactra      · 3/3 complete · 3 refused (concentration) · spent $13.86 · runaway $9.18 · exposed at start $0.00 · 2 writes per purchase
+  shared-cap  · 0/3 complete · 6 refused (shared-cap) · spent $59.76 · runaway $56.61 · exposed at start $20.00 · 1 writes per purchase
+  independent-wallets · 3/3 complete · 3 refused (own-wallet-exhausted) · spent $32.22 · runaway $27.54 · exposed at start $20.00 · 1 writes per purchase
+
+verdict: work-gets-through

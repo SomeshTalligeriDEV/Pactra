@@ -1,0 +1,14 @@
+Depth: six points; intercept=206634.725878, slope=98416.993541, R2=0.999944844
+Search: 1,200 strategies; 45,360 draws; 0 observed bound violations
+contract-tests-final.txt: 101 reported cases; seven fuzz functions x 512; grouped invariants 256 x 32
+gas-report-2026-09-18.txt: 101 reported cases; seven fuzz functions x 512; grouped invariants 256 x 32
+Baselines: 3 conditions x 2 scenarios x 3 repetitions; all totals match
+Loop ratios: independent/Pactra=3.000000; shared/Pactra=6.166667
+Gas open min/avg/median/max/calls: 23278, 171812, 170711, 187811, 1314
+Gas spawn min/avg/median/max/calls: 29941, 198231, 224844, 331273, 4784
+Gas revoke min/avg/median/max/calls: 28719, 30858, 30802, 35478, 131
+Gas draw min/avg/median/max/calls: 43864, 175289, 154746, 2570918, 58759
+Gas fund min/avg/median/max/calls: 84626, 85986, 84650, 129095, 1311
+Gas withdraw min/avg/median/max/calls: 43902, 56913, 65579, 65591, 5
+Gas release min/avg/median/max/calls: 26198, 107051, 150571, 150571, 15
+PASS

@@ -1,5 +1,5 @@
 /**
- * The two ways of paying for the same task.
+ * The three payment conditions for the same task.
  *
  * A. **Pactra.** Nothing leaves the vault until a purchase has been evaluated.
  *    The worker holds no key; the daemon does, and the contract decides.
@@ -17,7 +17,10 @@ import { load } from "../../daemon/src/config.ts";
 import { Gate } from "../../daemon/src/gate.ts";
 import { pactraFetch, type Transport } from "../../daemon/src/fetch.ts";
 import type { Settler, Payment, Settlement } from "../../daemon/src/settle.ts";
-import { GATEWAY, ERC20, type World, type WorkerId, OP_SHARED_KEY } from "./world.ts";
+import {
+  GATEWAY, ERC20, type World, type WorkerId, OP_SHARED_KEY,
+  OP_INDEP_LEFT_KEY, OP_INDEP_RIGHT_KEY,
+} from "./world.ts";
 
 export interface Purchase {
   ok: boolean;
@@ -34,7 +37,7 @@ export interface Purchase {
 }
 
 export interface Buyer {
-  id: "pactra" | "shared-cap";
+  id: "pactra" | "shared-cap" | "independent-wallets";
   /**
    * USDC out of the owner's hands before a single line of work was done.
    *
@@ -179,6 +182,71 @@ export async function sharedCapBuyer(world: World, cap6: bigint): Promise<Buyer>
       });
       await world.publicClient.waitForTransactionReceipt({ hash });
       remaining6 -= amount6;
+
+      const answered = await fetch(url, { headers: { "payment-signature": `local:${hash}` } });
+      const paid = await answered.json();
+      return {
+        ok: true, body: fact(paid), paidTo: offer.payTo, amount6,
+        chainWrites: 1, ms: Date.now() - started,
+      };
+    },
+    async stop() {},
+  };
+}
+
+/**
+ * Condition C.
+ *
+ * Each worker gets its own wallet, funded independently, with its own
+ * balance that only it draws from. This is the single-account baseline —
+ * the same shape as an smart-account session policy or a Safe allowance module
+ * grant, one per worker — rather than a shared pool. Nothing here checks
+ * one worker's spending against the other's, and nothing checks either
+ * against a root: there is no root, no tree, and no ancestor to debit.
+ * A worker that exhausts its own wallet is refused regardless of how much
+ * the other worker's wallet still holds, which is the property this
+ * condition exists to show and the shared-cap condition cannot.
+ */
+export async function independentWalletsBuyer(world: World, perWorker6: bigint): Promise<Buyer> {
+  const keys: Record<WorkerId, Hex> = { left: OP_INDEP_LEFT_KEY, right: OP_INDEP_RIGHT_KEY };
+  const wallets: Record<WorkerId, ReturnType<World["walletFor"]>> = {
+    left: world.walletFor(keys.left),
+    right: world.walletFor(keys.right),
+  };
+  const remaining6: Record<WorkerId, bigint> = { left: perWorker6, right: perWorker6 };
+
+  for (const id of ["left", "right"] as WorkerId[]) {
+    await world.asOwner.writeContract({
+      address: world.usdc, abi: ERC20, functionName: "approve", args: [world.gateway, perWorker6],
+    });
+    const funding = await world.asOwner.writeContract({
+      address: world.gateway, abi: GATEWAY, functionName: "depositFor",
+      args: [world.usdc, wallets[id].account.address, perWorker6],
+    });
+    await world.publicClient.waitForTransactionReceipt({ hash: funding });
+  }
+
+  return {
+    id: "independent-wallets",
+    exposureAtStart6: perWorker6 * 2n,
+    async buy(worker, url) {
+      const started = Date.now();
+      const challenged = await fetch(url);
+      const body = await challenged.json() as { accepts?: { payTo: Address; amount: string }[] };
+      const offer = body.accepts?.[0];
+      if (!offer) return { ok: false, amount6: 0n, refusedBy: "seller-asked-for-nothing", chainWrites: 0, ms: Date.now() - started };
+
+      const amount6 = BigInt(offer.amount);
+      if (amount6 > remaining6[worker]) {
+        return { ok: false, amount6, refusedBy: "own-wallet-exhausted", chainWrites: 0, ms: Date.now() - started };
+      }
+
+      const hash = await wallets[worker].writeContract({
+        address: world.gateway, abi: GATEWAY, functionName: "spendOffChain",
+        args: [world.usdc, offer.payTo, amount6],
+      });
+      await world.publicClient.waitForTransactionReceipt({ hash });
+      remaining6[worker] -= amount6;
 
       const answered = await fetch(url, { headers: { "payment-signature": `local:${hash}` } });
       const paid = await answered.json();

@@ -156,12 +156,20 @@ contract TreeVault {
     /* ------------------------------------------------------------------ */
 
     /// @notice Fund a tree. Anyone may pay in; only the owner may take out.
+    ///
+    /// Effects before the external call, unlike an earlier version of this
+    /// function: `treasury6` is written before `usdc.pull`, not after. Not
+    /// exploitable against plain USDC (no transfer hooks to reenter through),
+    /// but a token with hooks would otherwise see a treasury balance that
+    /// has not yet been credited for the very transfer in flight — the
+    /// ordinary checks-effects-interactions reason, applied even though the
+    /// current token does not require it.
     function fund(bytes32 root, uint128 amount6) external {
         MandateRegistry.Mandate memory m = registry.mandate(root);
         if (m.depth != 0) revert NotARoot(root);
         if (amount6 == 0) revert ZeroAmount();
-        usdc.pull(msg.sender, address(this), amount6);
         treasury6[root] += amount6;
+        usdc.pull(msg.sender, address(this), amount6);
         emit Funded(root, msg.sender, amount6);
     }
 

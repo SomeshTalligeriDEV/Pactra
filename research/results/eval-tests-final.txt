@@ -1,0 +1,64 @@
+TAP version 13
+# (node:71967) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: under Pactra the brief completes and every seller was really paid
+ok 1 - under Pactra the brief completes and every seller was really paid
+  ---
+  duration_ms: 1312.895291
+  ...
+# Subtest: nothing leaves the vault before the work does
+ok 2 - nothing leaves the vault before the work does
+  ---
+  duration_ms: 13.991834
+  ...
+# Subtest: the shared cap completes the same task, which is why it is the control
+ok 3 - the shared cap completes the same task, which is why it is the control
+  ---
+  duration_ms: 245.258292
+  ...
+# Subtest: a purchase larger than a tranche is refused, and the refusal names the bound
+ok 4 - a purchase larger than a tranche is refused, and the refusal names the bound
+  ---
+  duration_ms: 60.958833
+  ...
+# Subtest: a worker in a loop is stopped at its own bound, and its sibling still finishes
+ok 5 - a worker in a loop is stopped at its own bound, and its sibling still finishes
+  ---
+  duration_ms: 2055.008125
+  ...
+# (node:71968) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the task is a proportion of the window, not an amount
+ok 6 - the task is a proportion of the window, not an amount
+  ---
+  duration_ms: 0.443833
+  ...
+# Subtest: the whole task fits well inside the window it runs under
+ok 7 - the whole task fits well inside the window it runs under
+  ---
+  duration_ms: 0.197417
+  ...
+# Subtest: a brief is complete only when every source is cited
+ok 8 - a brief is complete only when every source is cited
+  ---
+  duration_ms: 0.718375
+  ...
+# Subtest: a citation nobody paid for is worse than a missing one
+ok 9 - a citation nobody paid for is worse than a missing one
+  ---
+  duration_ms: 0.077709
+  ...
+# Subtest: the sections split the sources, because the tree is the subject
+ok 10 - the sections split the sources, because the tree is the subject
+  ---
+  duration_ms: 0.250208
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4373.861292

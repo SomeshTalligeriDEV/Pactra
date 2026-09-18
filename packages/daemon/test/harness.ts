@@ -11,7 +11,7 @@ import { resolve, dirname } from "node:path";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
-  createPublicClient, createWalletClient, http, defineChain, parseAbi,
+  createPublicClient, createWalletClient, http, defineChain, parseAbi, keccak256, stringToHex,
   type Hex, type Address, type PublicClient, type WalletClient,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -20,11 +20,14 @@ import { TreeVaultAbi, MandateRegistryAbi } from "../src/abi.gen.ts";
 const here = dirname(fileURLToPath(import.meta.url));
 const contracts = resolve(here, "../../contracts");
 
-/* Anvil's first accounts. Public, funded, worthless — they ship with every
-   Foundry install, so writing them down here leaks nothing. */
-export const OWNER_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80" as Hex;
-export const OP_ROOT_KEY = "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d" as Hex;
-export const OP_CHILD_KEY = "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a" as Hex;
+/** Public deterministic local-test identities. Never use these on a live chain.
+ * Derived at runtime so the publication snapshot contains no wallet key files
+ * or literal private keys. Only the local Anvil chain funds these identities. */
+export const localTestKey = (index: number): Hex =>
+  keccak256(stringToHex(`pactra:publication-local-test:${index}`));
+export const OWNER_KEY = localTestKey(0);
+export const OP_ROOT_KEY = localTestKey(1);
+export const OP_CHILD_KEY = localTestKey(2);
 
 export const SELLER_PAYOUT = "0x6302D9e6DBB22fEC3c350551568Bb39B4b35Ad57" as Address;
 /** $0.0024 — the AIsa scholar endpoint from Circle's live catalogue. */
@@ -91,6 +94,13 @@ export async function startChain(port: number) {
   const publicClient = createPublicClient({ chain, transport: http(rpc), pollingInterval });
   for (let i = 0; i < 80; i++) {
     try { await publicClient.getBlockNumber(); break; } catch { await new Promise((r) => setTimeout(r, 200)); }
+  }
+
+  for (let i = 0; i < 9; i++) {
+    await publicClient.request({
+      method: "anvil_setBalance" as never,
+      params: [privateKeyToAccount(localTestKey(i)).address, "0x3635c9adc5dea00000"] as never,
+    });
   }
 
   const owner = privateKeyToAccount(OWNER_KEY);

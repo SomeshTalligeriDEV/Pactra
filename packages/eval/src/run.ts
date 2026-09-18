@@ -13,8 +13,9 @@
  *    which is the failure agents actually have. The question is whether the
  *    *other* worker's section still gets done.
  *
- * Both conditions are given the same authority — the window the owner signed —
- * so the comparison is like for like. What differs is where that authority
+ * Pactra and shared-cap use the same root window. Independent wallets
+ * each receive the nominal worker allowance; their aggregate funding is
+ * twice the root window in the normal scenario and equal in the loop scenario. What differs is where that authority
  * lives: under a bound the contract checks, or in a counter inside the process
  * doing the spending.
  *
@@ -28,7 +29,7 @@
 import { accept, taskCost6, SOURCES } from "./task.ts";
 import { scriptedAgent, faultyAgent, type Agent } from "./agent.ts";
 import { startSellers } from "./sellers.ts";
-import { pactraBuyer, sharedCapBuyer, type Buyer } from "./conditions.ts";
+import { pactraBuyer, sharedCapBuyer, independentWalletsBuyer, type Buyer } from "./conditions.ts";
 import { startWorld, WINDOW6, type World } from "./world.ts";
 
 export interface ConditionResult {
@@ -146,7 +147,15 @@ async function scenario(
     /* The same authority the owner signed, held somewhere else. Anything
        smaller would be a shared cap chosen to lose. */
     const shared = await condition(world, () => sharedCapBuyer(world, world.window6), runs, agent);
-    return { id, agent: agent.id, workerShareBps, conditions: [pactra, shared] };
+    /* The same per-worker share Pactra's own tree assigns, so this is a
+       like-for-like third condition rather than one sized to lose: each
+       worker gets exactly what its Pactra sibling node would have, in its
+       own wallet, with no cross-worker or ancestor accounting at all. */
+    const workerShare6 = (world.window6 * BigInt(workerShareBps)) / 10_000n;
+    const independent = await condition(
+      world, () => independentWalletsBuyer(world, workerShare6), runs, agent,
+    );
+    return { id, agent: agent.id, workerShareBps, conditions: [pactra, shared, independent] };
   } finally {
     await world.stop();
   }

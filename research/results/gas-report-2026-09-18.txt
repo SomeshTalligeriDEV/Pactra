@@ -1,0 +1,248 @@
+No files changed, compilation skipped
+
+Ran 12 tests for test/G5_Survival.t.sol:G5_Survival
+[PASS] test_a_child_wider_than_its_parent_is_refused_whoever_asks() (gas: 119848)
+[PASS] test_a_mandate_cannot_be_edited_after_it_is_signed() (gas: 200221)
+[PASS] test_a_refusal_cannot_be_deleted_rewritten_or_re_run() (gas: 398751)
+[PASS] test_a_release_does_not_raise_the_bound_it_stepped_around() (gas: 470407)
+[PASS] test_a_revocation_cannot_be_undone() (gas: 101317)
+[PASS] test_the_deployer_cannot_move_the_treasury_it_never_owned() (gas: 57476)
+[PASS] test_the_deployer_cannot_release_a_refusal_it_deployed_the_vault_for() (gas: 252574)
+[PASS] test_the_deployer_cannot_revoke_a_branch_or_widen_one() (gas: 80378)
+[PASS] test_the_deployer_holds_no_mandate_and_no_balance() (gas: 25339)
+[PASS] test_the_human_exit_exists_is_the_owners_alone_and_is_recorded() (gas: 421351)
+[PASS] test_the_vault_cannot_be_repointed_at_another_registry_or_token() (gas: 97051)
+[PASS] test_there_is_no_proxy_underneath_either_contract() (gas: 9069)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 8.92ms (1.72ms CPU time)
+
+Ran 16 tests for test/G6_Record.t.sol:G6_Record
+[PASS] test_a_node_cannot_be_rebound_to_a_friendlier_identity_after_a_refusal() (gas: 609600)
+[PASS] test_a_node_with_no_identity_produces_no_record_rather_than_an_orphan_one() (gas: 231120)
+[PASS] test_a_record_can_only_be_written_from_a_refusal_the_vault_holds() (gas: 45172)
+[PASS] test_a_refusal_is_recorded_once_however_many_times_it_is_offered() (gas: 468447)
+[PASS] test_a_release_is_appended_to_the_refusal_it_belongs_to_and_is_not_a_second_record() (gas: 824687)
+[PASS] test_a_release_nobody_signed_cannot_be_claimed() (gas: 477863)
+[PASS] test_a_stranger_cannot_write_a_record_that_reads_as_pactras() (gas: 634552)
+[PASS] test_an_identity_its_operator_does_not_hold_cannot_be_bound_to_a_node() (gas: 193492)
+[PASS] test_every_reason_the_contract_can_refuse_on_has_a_word_of_its_own() (gas: 75240)
+[PASS] test_every_record_names_the_refusal_it_came_from() (gas: 499078)
+[PASS] test_one_identity_cannot_stand_for_two_nodes() (gas: 62797)
+[PASS] test_the_commitment_changes_when_the_vault_state_it_names_changes() (gas: 364857)
+[PASS] test_the_record_carries_the_amount_the_contract_refused_and_not_a_number_anyone_chose() (gas: 471798)
+[PASS] test_the_record_is_filed_against_the_agent_that_drew_not_the_ancestor_that_refused() (gas: 3336400)
+[PASS] test_the_seat_cannot_write_a_refusal_that_did_not_happen_even_for_its_own_deployer() (gas: 221149)
+[PASS] test_the_word_is_the_one_every_other_surface_decodes() (gas: 486744)
+Suite result: ok. 16 passed; 0 failed; 0 skipped; finished in 16.76ms (14.78ms CPU time)
+
+Ran 1 test for test/G8_FundReentrancy.t.sol:G8_FundReentrancy
+[PASS] test_reentrant_fund_composes_without_losing_or_doubling_credit() (gas: 278787)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 347.71µs (88.67µs CPU time)
+
+Ran 1 test for test/G11_DepthSweep.t.sol:G11_DepthSweep
+[PASS] test_gas_by_depth() (gas: 22713962)
+Logs:
+  depth,gas
+  1,317171
+  2,398545
+  4,595570
+  8,989924
+  16,1779929
+  24,2571604
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 27.52ms (20.75ms CPU time)
+
+Ran 4 tests for test/G1_Allocation.t.sol:G1_Allocation
+[PASS] test_a_fixed_split_holds_each_branch_to_its_share() (gas: 4501987)
+[PASS] test_a_greedy_branch_can_starve_a_sibling_unless_the_owner_caps_it() (gas: 4328533)
+[PASS] test_an_orchestrator_may_spawn_generously_because_the_root_still_binds() (gas: 6029700)
+[PASS] test_two_branches_may_each_be_sized_for_the_whole_budget() (gas: 4552058)
+Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 35.12ms (28.04ms CPU time)
+
+Ran 12 tests for test/G1_Fence.t.sol:G1_Fence
+[PASS] test_a_daemon_can_misdirect_a_tranche_and_the_contract_cannot_stop_it() (gas: 515224)
+[PASS] test_a_draw_credits_only_the_drawing_nodes_own_daemon() (gas: 444143)
+[PASS] test_a_second_tree_cannot_spend_the_first_trees_treasury() (gas: 392309)
+[PASS] test_no_agent_key_holds_a_balance_or_an_allowance() (gas: 993901)
+[PASS] test_nothing_in_either_contract_can_erase_a_refusal() (gas: 468802)
+[PASS] test_only_the_nodes_own_daemon_may_draw_for_it() (gas: 109115)
+[PASS] test_the_declared_counterparty_is_bounded_even_though_it_is_only_declared() (gas: 495685)
+[PASS] test_the_deployer_holds_no_power_over_any_tree() (gas: 335852)
+[PASS] test_the_notional_cannot_be_understated_because_it_is_what_leaves_the_vault() (gas: 468906)
+[PASS] test_the_owner_can_take_their_money_back_but_that_is_not_a_reversal() (gas: 307472)
+[PASS] test_the_vault_never_carries_a_standing_allowance() (gas: 432434)
+[PASS] test_the_vault_rejects_native_value_so_the_two_decimal_views_never_mix() (gas: 68484)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 3.46ms (2.67ms CPU time)
+
+Ran 12 tests for test/G1_Narrowing.t.sol:G1_Narrowing
+[PASS] testFuzz_a_child_is_never_wider_than_its_parent_on_any_axis(uint128,uint128,uint16) (runs: 512, μ: 126650, ~: 83782)
+[PASS] test_a_child_cannot_raise_the_depth_bound_it_inherited() (gas: 241549)
+[PASS] test_a_child_may_not_carry_a_larger_budget_than_its_parent() (gas: 50353)
+[PASS] test_a_child_may_not_carry_a_larger_tranche_cap_than_its_parent() (gas: 51106)
+[PASS] test_a_child_may_not_loosen_the_concentration_bound() (gas: 51484)
+[PASS] test_a_longer_child_window_is_refused_too_equality_is_the_rule() (gas: 52137)
+[PASS] test_a_shorter_child_window_is_refused_because_it_resets_faster_than_what_it_debits() (gas: 52114)
+[PASS] test_a_sibling_daemon_cannot_spawn_under_its_sibling() (gas: 45167)
+[PASS] test_a_stranger_cannot_spawn_under_someone_elses_branch() (gas: 44784)
+[PASS] test_children_inherit_the_owner_so_no_branch_can_be_reparented_to_a_stranger() (gas: 55374)
+[PASS] test_the_owner_is_not_an_exception_to_narrowing() (gas: 57280)
+[PASS] test_the_tree_cannot_grow_deeper_than_the_root_allowed() (gas: 327456)
+Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 87.51ms (80.16ms CPU time)
+
+Ran 15 tests for test/G1_Refusal.t.sol:G1_Refusal
+[PASS] test_a_cut_branch_can_still_be_paid_by_the_owner_that_cut_it() (gas: 556910)
+[PASS] test_a_cut_branch_still_trying_to_spend_is_recorded_rather_than_reverted() (gas: 849458)
+[PASS] test_a_daemon_cannot_cut_a_branch_it_does_not_sit_above() (gas: 45994)
+[PASS] test_a_node_cannot_revoke_itself_out_of_a_refusal_and_back_in() (gas: 46727)
+[PASS] test_a_parents_daemon_can_cut_its_own_subtree_without_waking_the_owner() (gas: 58096)
+[PASS] test_a_refusal_consumes_no_budget_so_it_cannot_burn_down_a_rival_branch() (gas: 3499210)
+[PASS] test_a_refused_draw_returns_and_never_reverts_so_the_record_survives() (gas: 192070)
+[PASS] test_a_release_cannot_be_replayed() (gas: 350299)
+[PASS] test_a_single_draw_cannot_exceed_the_tranche_cap() (gas: 378335)
+[PASS] test_only_the_named_human_can_release_not_the_daemon_that_was_refused() (gas: 242464)
+[PASS] test_release_does_not_widen_a_bound_the_next_draw_is_refused_the_same_way() (gas: 481070)
+[PASS] test_release_funds_the_refused_purchase_and_leaves_the_refusal_standing() (gas: 348040)
+[PASS] test_revoking_a_parent_kills_every_descendant_in_one_transaction() (gas: 879172)
+[PASS] test_ten_thousand_small_calls_to_one_seller_are_refused_by_concentration() (gas: 55325964)
+[PASS] test_the_concentration_bound_is_per_counterparty_not_per_total() (gas: 1100459)
+Suite result: ok. 15 passed; 0 failed; 0 skipped; finished in 134.47ms (127.79ms CPU time)
+
+Ran 1 test for test/G1_Invariant.t.sol:G1_InvariantIsNotVacuous
+[PASS] test_the_handler_reaches_both_outcomes_and_the_invariants_hold_throughout() (gas: 514705577)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 457.93ms (450.85ms CPU time)
+
+Ran 6 tests for test/G1_Headroom.t.sol:G1_Headroom
+[PASS] testFuzz_a_draw_of_the_headroom_is_always_released(uint8) (runs: 512, μ: 2570397, ~: 2518776)
+[PASS] test_a_revoked_branch_has_no_headroom_at_all() (gas: 78061)
+[PASS] test_headroom_falls_by_exactly_what_a_draw_took() (gas: 587097)
+[PASS] test_headroom_is_the_tightest_limit_on_the_path_not_the_nodes_own() (gas: 2919058)
+[PASS] test_headroom_names_the_node_that_binds_so_a_refusal_is_never_a_surprise() (gas: 2278796)
+[PASS] test_headroom_never_promises_more_than_the_vault_holds() (gas: 167974)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 1.42s (1.42s CPU time)
+
+Ran 9 tests for test/G1_Lifetime.t.sol:G1_Lifetime
+[PASS] test_a_child_may_not_be_given_a_wider_lifetime_than_its_parent() (gas: 345372)
+[PASS] test_a_descendants_draw_spends_every_ancestors_lifetime() (gas: 970715)
+[PASS] test_a_mandate_with_no_lifetime_cap_is_refused() (gas: 74312)
+[PASS] test_a_mandate_with_no_tranche_cap_is_refused_rather_than_silently_useless() (gas: 74859)
+[PASS] test_a_refused_draw_consumes_no_lifetime() (gas: 831937)
+[PASS] test_a_window_that_resets_is_not_a_total_the_owner_signed_for() (gas: 5453543)
+[PASS] test_headroom_reports_the_lifetime_when_it_is_the_tighter_bound() (gas: 5214081)
+[PASS] test_the_exact_remaining_lifetime_is_allowed_and_one_unit_more_is_not() (gas: 819825)
+[PASS] test_without_a_lifetime_cap_the_same_sequence_never_refuses() (gas: 7588531)
+Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 1.37s (57.35ms CPU time)
+
+Ran 7 tests for test/G1_TreeArithmetic.t.sol:G1_TreeArithmetic
+[PASS] testFuzz_no_sequence_of_draws_anywhere_puts_the_root_over_its_budget(uint128[12],uint8[12],uint8[12]) (runs: 512, μ: 3769530, ~: 3771730)
+[PASS] testFuzz_the_vault_is_the_only_funding_source(uint128[12],uint8[12]) (runs: 512, μ: 2240224, ~: 2246149)
+[PASS] test_ancestorDebit_view_agrees_with_what_a_draw_would_do() (gas: 495799)
+[PASS] test_grandchild_draw_debits_every_ancestor_or_delegation_is_the_bypass() (gas: 529443)
+[PASS] test_the_refusal_names_the_ancestor_that_breached_not_the_node_that_asked() (gas: 3771427)
+[PASS] test_the_window_rolls_and_a_parent_never_drifts_out_of_phase_with_its_child() (gas: 601597)
+[PASS] test_two_children_cannot_each_spend_their_own_budget_because_the_root_sees_both() (gas: 3888794)
+Suite result: ok. 7 passed; 0 failed; 0 skipped; finished in 1.42s (2.75s CPU time)
+
+Ran 1 test for test/G9_NarrowingFuzz.t.sol:G9_NarrowingFuzz
+[PASS] testFuzz_spawn_succeeds_iff_every_field_is_within_the_parent(uint128,uint128,uint64,uint128,uint16) (runs: 512, μ: 54016, ~: 53615)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 1.39s (1.39s CPU time)
+
+Ran 1 test for test/G1_Invariant.t.sol:G1_Invariant
+[PASS]
+G1_Invariant invariants:
+[PASS] invariant_every_node_stays_inside_its_own_window
+[PASS] invariant_the_ledger_matches_the_balance
+[PASS] invariant_the_root_window_never_exceeds_the_budget_its_owner_signed
+ G1_Invariant invariants (runs: 256, calls: 8192, reverts: 101)
+
+╭-------------+----------+-------+---------+----------╮
+| Contract    | Selector | Calls | Reverts | Discards |
++=====================================================+
+| TreeHandler | draw     | 2688  | 0       | 0        |
+|-------------+----------+-------+---------+----------|
+| TreeHandler | spawn    | 2763  | 101     | 0        |
+|-------------+----------+-------+---------+----------|
+| TreeHandler | warp     | 2741  | 0       | 0        |
+╰-------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 3.52s (3.52s CPU time)
+
+Ran 2 tests for test/G10_DrawBoundsFuzz.t.sol:G10_DrawBoundsFuzz
+[PASS] testFuzz_draw_releases_iff_within_tranche_and_window(uint128) (runs: 512, μ: 193996, ~: 179595)
+[PASS] testFuzz_draw_respects_remaining_headroom_after_a_prior_spend(uint128) (runs: 512, μ: 367181, ~: 381504)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 3.62s (259.85ms CPU time)
+
+Ran 1 test for test/G4_Search.t.sol:G4_Search
+[PASS] test_no_strategy_gets_more_out_than_the_owner_signed_for() (gas: 8352172281)
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 215.47s (215.47s CPU time)
+
+╭--------------------------------------------------+-----------------+--------+--------+--------+---------╮
+| src/MandateRegistry.sol:MandateRegistry Contract |                 |        |        |        |         |
++=========================================================================================================+
+| Deployment Cost                                  | Deployment Size |        |        |        |         |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                                0 |            6191 |        |        |        |         |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+|                                                  |                 |        |        |        |         |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| Function Name                                    | Min             | Avg    | Median | Max    | # Calls |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| exists                                           |            2540 |   2540 |   2540 |   2540 |       2 |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| isLive                                           |            2956 |   4497 |   2956 |   7581 |       3 |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| mandate                                          |            2761 |  11059 |  12761 |  16761 |  199884 |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| open                                             |           23278 | 171812 | 170711 | 187811 |    1314 |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| path                                             |            1751 |   3398 |   1751 |  63557 |   59507 |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| revoke                                           |           28719 |  30858 |  30802 |  35478 |     131 |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| revokedAt                                        |             870 |   2959 |   1284 |  64284 |   59508 |
+|--------------------------------------------------+-----------------+--------+--------+--------+---------|
+| spawn                                            |           29941 | 198231 | 224844 | 331273 |    4784 |
+╰--------------------------------------------------+-----------------+--------+--------+--------+---------╯
+
+╭--------------------------------------+-----------------+--------+--------+---------+---------╮
+| src/TreeVault.sol:TreeVault Contract |                 |        |        |         |         |
++==============================================================================================+
+| Deployment Cost                      | Deployment Size |        |        |         |         |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+|                                    0 |           11879 |        |        |         |         |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+|                                      |                 |        |        |         |         |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| Function Name                        | Min             | Avg    | Median | Max     | # Calls |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| ancestorDebit                        |           73961 |  73961 |  73961 |   73961 |       1 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| concentrationBound                   |           24526 |  24549 |  24526 |   24585 |       5 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| draw                                 |           43864 | 175289 | 154746 | 2570918 |   58759 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| fund                                 |           84626 |  85986 |  84650 |  129095 |    1311 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| gateway                              |             305 |    305 |    305 |     305 |       1 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| headroom                             |           25462 |  84186 |  84500 |   84618 |     517 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| lifetimeSpent                        |            2487 |   2487 |   2487 |    2487 |      10 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| refusal                              |            2646 |  11481 |  12136 |   12136 |      29 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| refusalCount                         |            2367 |   2367 |   2367 |    2367 |       6 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| registry                             |             260 |    260 |    260 |     260 |      17 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| release                              |           26198 | 107051 | 150571 |  150571 |      15 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| treasury6                            |            2555 |   2555 |   2555 |    2555 |     562 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| usdc                                 |             238 |    238 |    238 |     238 |       1 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| windowSpent                          |           24093 |  24149 |  24153 |   24677 |   22510 |
+|--------------------------------------+-----------------+--------+--------+---------+---------|
+| withdraw                             |           43902 |  56913 |  65579 |   65591 |       5 |
+╰--------------------------------------+-----------------+--------+--------+---------+---------╯
+
+
+Ran 16 test suites in 216.21s (228.97s CPU time): 101 tests passed, 0 failed, 0 skipped (101 total tests)

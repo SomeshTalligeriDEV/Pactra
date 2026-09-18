@@ -1,22 +1,22 @@
 /**
- * One chain, one owner, one task — and two ways of paying for it.
+ * One chain, one owner, one task — and three payment conditions.
  *
  * The deployment comes from `startChain`, the same one the daemon's end to end
- * suite runs against, so the contracts under both conditions are the contracts
+ * suite runs against, so the contracts under all conditions are the contracts
  * that ship. What this file adds is the tree: a root the owner signed and two
  * workers under it, one per section of the brief.
  */
 import { parseAbi, type Address, type Hex } from "viem";
-import { startChain, type Chain } from "../../daemon/test/harness.ts";
+import { startChain, localTestKey, type Chain } from "../../daemon/test/harness.ts";
 import { MandateRegistryAbi, TreeVaultAbi } from "../../daemon/src/abi.gen.ts";
 
-/* Anvil accounts 3, 4 and 5. Public, funded, worthless. Operators need gas
-   because the operator submits the draw, and they hold no USDC by design. */
-export const OP_ROOT_KEY = "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6" as Hex;
-export const OP_LEFT_KEY = "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a" as Hex;
-export const OP_RIGHT_KEY = "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba" as Hex;
-/** Account 6, the one operator a shared cap gives the whole tree. */
-export const OP_SHARED_KEY = "0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e" as Hex;
+/* Distinct public local-test identities, funded only by startChain's Anvil. */
+export const OP_ROOT_KEY = localTestKey(3);
+export const OP_LEFT_KEY = localTestKey(4);
+export const OP_RIGHT_KEY = localTestKey(5);
+export const OP_SHARED_KEY = localTestKey(6);
+export const OP_INDEP_LEFT_KEY = localTestKey(7);
+export const OP_INDEP_RIGHT_KEY = localTestKey(8);
 
 export const ERC20 = parseAbi([
   "function mint(address to, uint256 v)",
