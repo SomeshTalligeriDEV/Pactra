@@ -35,7 +35,7 @@ export const arc = defineChain({
   blockExplorers: { default: { name: "arcscan", url: ARC.explorer } },
   /* Declared so viem may pack a batch of `eth_call`s into one request. A tree
      is read view by view, and a public endpoint counts requests. */
-  contracts: { multicall3: { address: ARC.multicall3 as `0x${string}` } },
+  contracts: Number(ARC.chainId) === 31337 ? undefined : { multicall3: { address: ARC.multicall3 as `0x${string}` } },
 });
 
 export interface MandateParams {

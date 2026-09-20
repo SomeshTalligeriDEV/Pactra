@@ -1,0 +1,185 @@
+1
+00:00:00,000 --> 00:00:04,626
+Pactra explores agentic payments: how can several delegated workers share one
+spending limit?
+
+2
+00:00:04,626 --> 00:00:12,100
+This demo connects a local test wallet, signs real contract transactions, and
+shows a looping worker stopped by a budget rule.
+
+3
+00:00:13,300 --> 00:00:15,529
+First, connect the local test wallet.
+
+4
+00:00:15,529 --> 00:00:19,245
+I review the twenty dollar mandate and confirm its transaction.
+
+5
+00:00:19,245 --> 00:00:23,333
+Funding needs two signatures: a token approval, then the vault deposit.
+
+6
+00:00:23,333 --> 00:00:25,934
+I then sign three narrower worker mandates.
+
+7
+00:00:25,934 --> 00:00:30,021
+These are real browser-signed transactions on isolated Anvil, using mock
+funds.
+
+8
+00:00:31,220 --> 00:00:34,749
+The owner console reads the signed mandate directly from the contracts.
+
+9
+00:00:34,749 --> 00:00:38,278
+The root has a twenty dollar window budget and three workers.
+
+10
+00:00:38,278 --> 00:00:42,770
+Two accepted draws total seventy seven cents, charged to their workers and the
+root.
+
+11
+00:00:42,770 --> 00:00:44,374
+These are actual contract reads.
+
+12
+00:00:45,570 --> 00:00:48,243
+The tree shows how authority is shared.
+
+13
+00:00:48,243 --> 00:00:52,062
+Every accepted draw charges its own node and all ancestors.
+
+14
+00:00:52,062 --> 00:00:54,735
+Children can only narrow the parent policy.
+
+15
+00:00:54,735 --> 00:00:58,936
+Tranche, window, lifetime, revocation and declared counterparty rules
+constrain each draw.
+
+16
+00:01:00,140 --> 00:01:02,252
+The product walkthrough explains a purchase.
+
+17
+00:01:02,252 --> 00:01:05,773
+An agent asks for a URL through the payment runtime.
+
+18
+00:01:05,773 --> 00:01:09,294
+The seller returns an x four oh two price challenge.
+
+19
+00:01:09,294 --> 00:01:12,815
+Pactra checks the mandate path and obtains bounded payment capacity.
+
+20
+00:01:12,815 --> 00:01:13,871
+Settlement happens afterwards.
+
+21
+00:01:13,871 --> 00:01:16,687
+Agent-facing tools do not receive the operator key.
+
+22
+00:01:17,890 --> 00:01:24,157
+Now the local harness submits seven requests of fifty one cents from one
+worker to the same declared seller.
+
+23
+00:01:24,157 --> 00:01:27,125
+Six are accepted, totaling three dollars and six cents.
+
+24
+00:01:27,125 --> 00:01:30,753
+The seventh would exceed that worker's three dollar fifty concentration
+allowance.
+
+25
+00:01:30,753 --> 00:01:32,072
+The contract refuses it.
+
+26
+00:01:32,072 --> 00:01:37,020
+The root now records three dollars and eighty three cents, including the
+earlier useful work.
+
+27
+00:01:38,220 --> 00:01:43,097
+The refusals view shows the actual rejected request, its amount, and the
+concentration reason.
+
+28
+00:01:43,097 --> 00:01:45,884
+Refused draws do not consume the agent budget.
+
+29
+00:01:45,884 --> 00:01:51,458
+Owner administration is a separate trust boundary: an explicit owner release
+can bypass agent budget accounting.
+
+30
+00:01:51,458 --> 00:01:56,335
+This prototype does not remove the need to trust the owner or payment runtime.
+
+31
+00:01:57,530 --> 00:02:02,901
+An AI orchestrator integrates through three MCP tools: fetch, spawn, and
+status.
+
+32
+00:02:02,901 --> 00:02:07,824
+It can request paid resources, delegate narrower authority, and inspect
+headroom.
+
+33
+00:02:07,824 --> 00:02:12,300
+The repository includes the contracts, payment runtime, console, and
+evaluation.
+
+34
+00:02:12,300 --> 00:02:17,671
+Stress experiments use scripted workers, not a claim of general AI
+reliability.
+
+35
+00:02:18,870 --> 00:02:25,624
+In the recorded looping-worker comparison, Pactra completed all three tasks
+with nine dollars and eighteen cents of loop spending.
+
+36
+00:02:25,624 --> 00:02:31,668
+Independent wallets also completed all three, with twenty seven dollars and
+fifty four cents of loop spending.
+
+37
+00:02:31,668 --> 00:02:33,445
+The shared cap completed none.
+
+38
+00:02:33,445 --> 00:02:37,711
+These are controlled local results with mock settlement, not production
+payment metrics.
+
+39
+00:02:38,910 --> 00:02:42,845
+The focus is bounded autonomy, observable failures, and reproducible evidence.
+
+40
+00:02:42,845 --> 00:02:48,747
+The archive reports one hundred and one contract cases, and ten evaluation
+tests passed again.
+
+41
+00:02:48,747 --> 00:02:52,682
+This is a prototype, without professional audit or formal verification.
+
+42
+00:02:52,682 --> 00:02:56,224
+Explore the code and reproduce the demonstration from GitHub.

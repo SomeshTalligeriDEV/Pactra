@@ -1,0 +1,52 @@
+[
+  {
+    "scene": "intro",
+    "startSeconds": 0,
+    "durationSeconds": 13.3
+  },
+  {
+    "scene": "wallet",
+    "startSeconds": 13.3,
+    "durationSeconds": 17.92
+  },
+  {
+    "scene": "overview",
+    "startSeconds": 31.22,
+    "durationSeconds": 14.35
+  },
+  {
+    "scene": "tree",
+    "startSeconds": 45.57,
+    "durationSeconds": 14.57
+  },
+  {
+    "scene": "paid",
+    "startSeconds": 60.14,
+    "durationSeconds": 17.75
+  },
+  {
+    "scene": "loop",
+    "startSeconds": 77.89,
+    "durationSeconds": 20.33
+  },
+  {
+    "scene": "refusal",
+    "startSeconds": 98.22,
+    "durationSeconds": 19.31
+  },
+  {
+    "scene": "mcp",
+    "startSeconds": 117.53,
+    "durationSeconds": 21.34
+  },
+  {
+    "scene": "evidence",
+    "startSeconds": 138.87,
+    "durationSeconds": 20.04
+  },
+  {
+    "scene": "end",
+    "startSeconds": 158.91,
+    "durationSeconds": 18.51
+  }
+]

@@ -31,6 +31,12 @@ Agent-facing tools never receive the operator's private key.
 
 [Overview](#overview) · [The solution](#the-solution) · [Architecture](#architecture) · [The mandate](#the-mandate) · [Bounds and refusals](#bounds-and-refusals) · [Deployment](#deployment) · [Quick start](#quick-start) · [Owner workflow](#owner-workflow) · [Integration paths](#integration-paths) · [HTTP API](#http-api) · [Settlement and the record](#settlement-and-the-record) · [Evidence and testing](#evidence-and-testing) · [Scope and limitations](#scope-and-limitations) · [Tech stack](#tech-stack) · [Repository structure](#repository-structure) · [Self-hosting](#self-hosting) · [Roadmap](#roadmap) · [Contributing](#contributing) · [License](#license)
 
+## Builder demo
+
+[Watch the narrated application demo](docs/demo/pactra-razorpay-demo.mp4) · [Run the local contract-backed demo](docs/demo/README.md)
+
+The demo uses real Pactra contracts on isolated Anvil with mock funds. It includes the owner console, a concentration refusal, MCP integration, and recorded evaluation results.
+
 ## Overview
 
 An orchestrator starts four workers. Each worker is allowed to spend $5. Every worker stays within its own limit, but together they can spend $20—even if the owner intended the entire task to cost no more than $10.
@@ -165,7 +171,7 @@ The checked-in [Arc testnet deployment](packages/contracts/deployments/5042002.j
 | ConductRecord | `0xa8bcdda003cddfb672a33e23a0bb375b6bed4a9f` |
 <!-- PACTRA_DEPLOYMENT_TABLE_END -->
 
-Use the deployment JSON when configuring a service; this table is a documentation snapshot. ERC-8004 registry addresses, USDC, and Gateway addresses are recorded there too. Historical experiment fixtures may refer to earlier deployments.
+This deployment is archival and predates the reviewed `fund()` ordering change. It has not been matched to implementation revision `236f9f8744308bf9f7becc048d25777e2d5711f0`; the corrected code is validated locally. Use the deployment JSON only when intentionally inspecting that archival version; this table is a documentation snapshot. ERC-8004 registry addresses, USDC, and Gateway addresses are recorded there too. Historical experiment fixtures may refer to earlier deployments.
 
 The project targets **testnet**. Current source still contains `pactra.example` placeholders, including `ConductRecord.RECORD_BASE`; configure and review these before a new deployment. Changing the README or web host does not change a URL compiled into a deployed contract.
 

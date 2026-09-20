@@ -1,0 +1,76 @@
+{
+  "screens": 20,
+  "browserErrors": [],
+  "signedTransactions": [
+    {
+      "action": "open",
+      "hash": "0x9f50bdefc1393ea992747890e2d52ec7a0c190bbf7a7f88a79c1f9720b22be5c",
+      "from": "0x7614E024d17660d4D571F8b45670C77d41F0fda7",
+      "to": "0x8afbff6d11cc1d2ffae5fea4e1778e8fbc10c874",
+      "receiptStatus": "success",
+      "blockNumber": 9
+    },
+    {
+      "action": "approve",
+      "hash": "0x544382d889c0eb2e8de55dc61488aea3633c7db22660e8da6dd66f0865e8e3dd",
+      "from": "0x7614E024d17660d4D571F8b45670C77d41F0fda7",
+      "to": "0xc7baab5fb6f199c24418e4f0e131fecf3346560f",
+      "receiptStatus": "success",
+      "blockNumber": 10
+    },
+    {
+      "action": "fund",
+      "hash": "0xf9045cb02d0f535a0baa6a4efd053443be2a345c75ac9d2d0935a4b40e32ab38",
+      "from": "0x7614E024d17660d4D571F8b45670C77d41F0fda7",
+      "to": "0x8a3d6e46bb9aa35601319777e00cb930ede672ad",
+      "receiptStatus": "success",
+      "blockNumber": 11
+    },
+    {
+      "action": "spawn",
+      "hash": "0x3542dcf273fc7a1bd730131fdada4f84c2461a9945f50efd6e96620f6b26a78c",
+      "from": "0x7614E024d17660d4D571F8b45670C77d41F0fda7",
+      "to": "0x8afbff6d11cc1d2ffae5fea4e1778e8fbc10c874",
+      "receiptStatus": "success",
+      "blockNumber": 12
+    },
+    {
+      "action": "spawn",
+      "hash": "0x79f2632e88fd5dcabb6a0765076efb907b81b319ffeec27b278ef566ef367a98",
+      "from": "0x7614E024d17660d4D571F8b45670C77d41F0fda7",
+      "to": "0x8afbff6d11cc1d2ffae5fea4e1778e8fbc10c874",
+      "receiptStatus": "success",
+      "blockNumber": 13
+    },
+    {
+      "action": "spawn",
+      "hash": "0xd8fa0144ae81b596c2fe860d8a6decaeee98340732ec7ef2c19f93ed04d67b63",
+      "from": "0x7614E024d17660d4D571F8b45670C77d41F0fda7",
+      "to": "0x8afbff6d11cc1d2ffae5fea4e1778e8fbc10c874",
+      "receiptStatus": "success",
+      "blockNumber": 14
+    }
+  ],
+  "localState": {
+    "environment": "Local Anvil; mock token and Gateway",
+    "root": "0xa688de23a7120539475dc60e690ce275a6f7891b7b1b3bae8c9555e2c9cdaebf",
+    "children": [
+      "0xd394db60f6e2c8ed153520b25e399dc3bcbc38da10e79f111dfed26192e1c25f",
+      "0x2084347f17b381e08b10a58149db4e2014e7c6ec2a39d3709c13c9a0c66ce238",
+      "0x6c01012400fa12329bd2a19edae02641a66001a9ab34e4e49f4d6d751f4ac038"
+    ],
+    "operator": "0x43A8fF81Fc7655A63311716c7495C4a9Db04D5Da",
+    "loopDone": true,
+    "rootSpent6": "3830000"
+  },
+  "checks": [
+    "Connected local wallet: six browser-signed transactions (open, approve, fund, three spawns)",
+    "Root initially charged 770000 base units",
+    "Four nodes read from actual local contracts",
+    "Paid walkthrough controls exercised",
+    "Seven 510000-base-unit requests: six accepted; one concentration refusal",
+    "Root final lifetime spent 3830000 base units",
+    "Refusal rendered from local contract event",
+    "MCP documentation renders"
+  ]
+}

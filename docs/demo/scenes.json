@@ -1,0 +1,62 @@
+[
+  {
+    "id": "intro",
+    "heading": "Payments for a team of agents",
+    "label": "PACTRA \u00b7 BUILDER DEMO",
+    "text": "Pactra explores agentic payments: how can several delegated workers share one spending limit? This demo connects a local test wallet, signs real contract transactions, and shows a looping worker stopped by a budget rule."
+  },
+  {
+    "id": "wallet",
+    "heading": "Connect. Review. Sign.",
+    "label": "CONNECTED LOCAL TEST WALLET \u00b7 REAL SIGNED TRANSACTIONS",
+    "text": "First, connect the local test wallet. I review the twenty dollar mandate and confirm its transaction. Funding needs two signatures: a token approval, then the vault deposit. I then sign three narrower worker mandates. These are real browser-signed transactions on isolated Anvil, using mock funds."
+  },
+  {
+    "id": "overview",
+    "heading": "One root. Three delegated workers.",
+    "label": "REAL CONTRACTS \u00b7 LOCAL ANVIL \u00b7 MOCK FUNDS",
+    "text": "The owner console reads the signed mandate directly from the contracts. The root has a twenty dollar window budget and three workers. Two accepted draws total seventy seven cents, charged to their workers and the root. These are actual contract reads."
+  },
+  {
+    "id": "tree",
+    "heading": "Delegation does not multiply authority",
+    "label": "OWNER CONSOLE \u00b7 LIVE LOCAL CONTRACT READS",
+    "text": "The tree shows how authority is shared. Every accepted draw charges its own node and all ancestors. Children can only narrow the parent policy. Tranche, window, lifetime, revocation and declared counterparty rules constrain each draw."
+  },
+  {
+    "id": "paid",
+    "heading": "The agent asks for a resource",
+    "label": "INTERACTIVE PURCHASE WALKTHROUGH \u00b7 ILLUSTRATION",
+    "text": "The product walkthrough explains a purchase. An agent asks for a URL through the payment runtime. The seller returns an x four oh two price challenge. Pactra checks the mandate path and obtains bounded payment capacity. Settlement happens afterwards. Agent-facing tools do not receive the operator key."
+  },
+  {
+    "id": "loop",
+    "heading": "Runaway requests meet a real bound",
+    "label": "SEVEN LOCAL DRAW REQUESTS \u00b7 ACTUAL CONTRACT EXECUTION",
+    "text": "Now the local harness submits seven requests of fifty one cents from one worker to the same declared seller. Six are accepted, totaling three dollars and six cents. The seventh would exceed that worker's three dollar fifty concentration allowance. The contract refuses it. The root now records three dollars and eighty three cents, including the earlier useful work."
+  },
+  {
+    "id": "refusal",
+    "heading": "A refusal has a reason and a record",
+    "label": "OWNER CONSOLE \u00b7 ON-CHAIN LOCAL REFUSAL",
+    "text": "The refusals view shows the actual rejected request, its amount, and the concentration reason. Refused draws do not consume the agent budget. Owner administration is a separate trust boundary: an explicit owner release can bypass agent budget accounting. This prototype does not remove the need to trust the owner or payment runtime."
+  },
+  {
+    "id": "mcp",
+    "heading": "Three tools. A bounded payment runtime.",
+    "label": "MCP \u00b7 HTTP DAEMON \u00b7 PROCESS PROXY",
+    "text": "An AI orchestrator integrates through three MCP tools: fetch, spawn, and status. It can request paid resources, delegate narrower authority, and inspect headroom. The repository includes the contracts, payment runtime, console, and evaluation. Stress experiments use scripted workers, not a claim of general AI reliability."
+  },
+  {
+    "id": "evidence",
+    "heading": "Test the failure path, not just success",
+    "label": "RECORDED LOCAL EVALUATION \u00b7 THREE REPETITIONS PER CONDITION",
+    "text": "In the recorded looping-worker comparison, Pactra completed all three tasks with nine dollars and eighteen cents of loop spending. Independent wallets also completed all three, with twenty seven dollars and fifty four cents of loop spending. The shared cap completed none. These are controlled local results with mock settlement, not production payment metrics."
+  },
+  {
+    "id": "end",
+    "heading": "Built to inspect. Built to reproduce.",
+    "label": "Somesh.S.Talligeri \u00b7 RAZORPAY AI BUILDERS SUBMISSION",
+    "text": "The focus is bounded autonomy, observable failures, and reproducible evidence. The archive reports one hundred and one contract cases, and ten evaluation tests passed again. This is a prototype, without professional audit or formal verification. Explore the code and reproduce the demonstration from GitHub."
+  }
+]

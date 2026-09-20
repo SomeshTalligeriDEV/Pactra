@@ -1,0 +1,38 @@
+{
+  "intro": [
+    "intro-0.png"
+  ],
+  "wallet": [
+    "wallet-0.png",
+    "wallet-1.png",
+    "wallet-2.png",
+    "wallet-3.png",
+    "wallet-4.png"
+  ],
+  "overview": [
+    "overview-0.png",
+    "overview-1.png"
+  ],
+  "tree": [
+    "tree-0.png",
+    "tree-1.png"
+  ],
+  "paid": [
+    "paid-0.png",
+    "paid-1.png",
+    "paid-2.png",
+    "paid-3.png"
+  ],
+  "loop": [
+    "loop-0.png",
+    "loop-1.png"
+  ],
+  "refusal": [
+    "refusal-0.png",
+    "refusal-1.png"
+  ],
+  "mcp": [
+    "mcp-0.png",
+    "mcp-1.png"
+  ]
+}

@@ -12,7 +12,7 @@ import { Reveal } from "../parts/Reveal";
  */
 const CHECKS = [
   "No single draw goes past the tranche cap.",
-  "A trailing window, the same length at every depth.",
+  "A tumbling window, the same duration at every depth.",
   "No one seller takes more than its share of a window.",
   "Every parent up to the root is debited on every draw.",
 ];
@@ -79,7 +79,7 @@ export function Counterfactual() {
             <p className="lede">
               A CFO wants an override, and “we can never undo this” reads as a
               defect. Release is there: a named person signs it from their own
-              key. What cannot be reversed is the bound, not the decision.
+              key. The owner is trusted: a release bypasses agent budget accounting.
             </p>
           </div>
           <hr className="rule" />

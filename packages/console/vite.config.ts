@@ -1,8 +1,16 @@
-import { defineConfig } from "vite";
+import { defineConfig, type ViteDevServer } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 
 const local = (path: string) => fileURLToPath(new URL(path, import.meta.url));
+
+// Opt-in development-only network adapter for the reproducible local demo.
+// Public addresses only; production builds always use the recorded fixtures.
+const demoPath = process.env.PACTRA_LOCAL_DEMO_CONFIG;
+const demo = demoPath ? JSON.parse(readFileSync(demoPath, "utf8")) : null;
+if (demo && new URL(demo.rpc).hostname !== "127.0.0.1") throw new Error("Demo RPC must be loopback");
+const demoModule = "\0pactra-local-demo-fixtures";
 
 /**
  * Same resolution as `@pactra/site`, and for the same reasons.
@@ -22,11 +30,34 @@ export default defineConfig({
      site's own bundle: same names, one directory, whichever deploys last
      wins and the other surface loads nothing. The trailing slash matters. */
   base: "/console/",
-  plugins: [react()],
+  plugins: [react(), ...(demo ? [{
+    name: "pactra-local-demo",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url === "/console") { res.writeHead(302, { Location: "/console/" }); res.end(); return; }
+        next();
+      });
+    },
+    configResolved(config: { command: string }) {
+      if (config.command === "build") throw new Error("Local demo configuration cannot be used for a production build");
+    },
+    resolveId(id: string) { if (id === "pactra-local-demo-fixtures") return demoModule; },
+    load(id: string) {
+      if (id !== demoModule) return;
+      const source = JSON.stringify(local("../fixtures/src/index.ts"));
+      return `export * from ${source}; import * as base from ${source};
+        const d = ${JSON.stringify(demo)};
+        export const ARC = {...base.ARC, chainId:31337, name:'Local Anvil demo', rpc:d.rpc, erc20:d.usdc, explorer:'http://127.0.0.1:8660'};
+        export const DEPLOYMENT = {...base.DEPLOYMENT, registry:d.registry, vault:d.vault, record:d.record, fromBlock:0};
+        export const DEMO = {...base.DEMO, owner:d.owner};
+        export const ERC8004 = {...base.ERC8004, identity:d.identity, reputation:d.reputation};`;
+    },
+  }] : [])],
   resolve: {
     alias: [
+      ...(demo ? [{ find: /^@privy-io\/react-auth$/, replacement: local("./src/lib/local-demo-wallet.tsx") }] : []),
       { find: /^pactra-ui$/, replacement: local("../ui/index.ts") },
-      { find: /^@pactra\/fixtures$/, replacement: local("../fixtures/src/index.ts") },
+      { find: /^@pactra\/fixtures$/, replacement: demo ? "pactra-local-demo-fixtures" : local("../fixtures/src/index.ts") },
       { find: /^@pactra\/fixtures\/preview$/, replacement: local("../fixtures/src/preview.ts") },
       { find: /^react$/, replacement: local("./node_modules/react") },
       { find: /^react-dom$/, replacement: local("./node_modules/react-dom") },
